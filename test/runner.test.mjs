@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -100,11 +100,13 @@ test("timeout force-kills a SIGTERM-resistant descendant after its parent exits"
   context.after(() => rmSync(root, { recursive: true, force: true }));
   const environment = createExecutionEnvironment(root);
   const pidPath = join(root, "descendant.pid");
-  const child = "require('node:fs').writeFileSync(process.argv[1],String(process.pid));process.on('SIGTERM',()=>{});setInterval(()=>{},1000)";
-  const parent = `require('node:child_process').spawn(process.execPath,['-e',${JSON.stringify(child)},${JSON.stringify(pidPath)}],{stdio:'ignore'});setInterval(()=>{},1000)`;
+  const child = "process.on('SIGTERM',()=>{});setInterval(()=>{},1000)";
+  const parent = `const child=require('node:child_process').spawn(process.execPath,['-e',${JSON.stringify(child)}],{stdio:'ignore'});require('node:fs').writeFileSync(${JSON.stringify(pidPath)},String(child.pid));setInterval(()=>{},1000)`;
   const started = Date.now();
+  const execution = execute(process.execPath, ["-e", parent], { cwd: root, environment, timeoutMs: 300 });
+  await waitForFile(pidPath);
   await assert.rejects(
-    execute(process.execPath, ["-e", parent], { cwd: root, environment, timeoutMs: 300 }),
+    execution,
     /timed out/u,
   );
   assert.ok(Date.now() - started < 4_000);
@@ -129,4 +131,12 @@ function processIsRunning(pid) {
     if (error.code === "ENOENT") return false;
     throw error;
   }
+}
+
+async function waitForFile(path) {
+  for (let attempt = 0; attempt < 100; attempt += 1) {
+    if (existsSync(path)) return;
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
+  throw new Error("timed out waiting for child pid file");
 }

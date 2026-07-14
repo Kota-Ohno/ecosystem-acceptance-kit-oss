@@ -33,10 +33,12 @@ test("timeout settles when a detached descendant keeps output pipes open", { tim
   const root = mkdtempSync(join(tmpdir(), "ecosystem-escaped-child-"));
   context.after(() => rmSync(root, { recursive: true, force: true }));
   const pidPath = join(root, "escaped.pid");
-  const escaped = "require('node:fs').writeFileSync(process.argv[1],String(process.pid));setInterval(()=>{},1000)";
-  const parent = `require('node:child_process').spawn(process.execPath,['-e',${JSON.stringify(escaped)},${JSON.stringify(pidPath)}],{detached:true,stdio:['ignore',1,2]});setInterval(()=>{},1000)`;
+  const escaped = "setInterval(()=>{},1000)";
+  const parent = `const child=require('node:child_process').spawn(process.execPath,['-e',${JSON.stringify(escaped)}],{detached:true,stdio:['ignore',1,2]});require('node:fs').writeFileSync(${JSON.stringify(pidPath)},String(child.pid));setInterval(()=>{},1000)`;
   const started = Date.now();
-  const result = await runChildProcess(process.execPath, ["-e", parent], { timeoutMs: 100, killGraceMs: 100 });
+  const execution = runChildProcess(process.execPath, ["-e", parent], { timeoutMs: 300, killGraceMs: 100 });
+  await waitForFile(pidPath);
+  const result = await execution;
   assert.equal(result.timedOut, true);
   assert.ok(Date.now() - started < 1_000);
   const escapedPid = Number(readFileSync(pidPath, "utf8"));

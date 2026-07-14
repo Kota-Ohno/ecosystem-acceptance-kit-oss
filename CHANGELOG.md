@@ -7,6 +7,8 @@
   directory, and packet digest so it works from any current directory.
 - Quote POSIX-shell arguments and suppress the generated command for paths with
   terminal control or bidirectional-formatting characters.
+- Split retained-Evidence verification tests from onboarding tests for focused
+  trust-boundary maintenance without changing runtime behavior.
 
 ## 0.11.1 — 2026-07-14
 

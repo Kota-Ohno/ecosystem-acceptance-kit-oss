@@ -24,7 +24,7 @@ cd ecosystem-acceptance-kit-oss
 corepack enable
 pnpm install --frozen-lockfile --ignore-scripts
 pnpm demo
-pnpm doctor
+pnpm doctor --onboard
 ```
 
 The repository pins pnpm 11.0.8. If `corepack` is unavailable but that pnpm
@@ -32,8 +32,10 @@ version is already installed, skip the `corepack enable` line.
 
 `pnpm demo` is deterministic, uses only Node.js, performs no network access, and
 proves that a synthetic receipt verifies while a mutation is rejected. It does
-not claim that the real repositories passed. `pnpm doctor` checks the tools,
-versions, GitHub access, and other prerequisites needed by full acceptance.
+not claim that the real repositories passed. `pnpm doctor --onboard` checks only
+Node.js, Git, pnpm, the supported OS, and Evidence Forge access. Plain
+`pnpm doctor` keeps the broader npm, Cargo, and three-repository checks needed by
+full acceptance.
 
 Run the local tutorial and create a verified packet with one command:
 
@@ -127,6 +129,9 @@ pnpm --silent onboard --source ./notes.txt --exact-file ./private-exact.txt \
 # Diagnose all full-run prerequisites; use --offline to avoid GitHub access.
 pnpm doctor
 node bin/ecosystem-accept.mjs doctor --offline
+
+# Diagnose only the lightweight Evidence onboarding path.
+pnpm doctor --onboard
 
 # Verify the actual tarball offline; this is also part of pnpm check.
 pnpm smoke:package

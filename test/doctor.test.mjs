@@ -45,3 +45,31 @@ test("doctor fails closed when a repository cannot be reached", async () => {
   assert.equal(report.fullAcceptanceReady, false);
   assert.equal(report.assurance.repositoryCodeExecuted, false);
 });
+
+test("onboarding doctor ignores unrelated full-acceptance tools and repositories", async () => {
+  const calls = [];
+  const execute = async (command, arguments_) => {
+    calls.push([command, ...arguments_]);
+    return successful(command, arguments_);
+  };
+  const report = await diagnoseEnvironment({
+    manifest, execute, nodeVersion: "24.4.0", platform: "darwin", network: true, scope: "onboard",
+  });
+  assert.equal(report.outcome, "ready");
+  assert.equal(report.scope, "onboard");
+  assert.equal(report.onboardingReady, true);
+  assert.equal(report.fullAcceptanceReady, null);
+  assert.deepEqual(report.checks.map((entry) => entry.name), ["node", "platform", "git", "pnpm"]);
+  assert.deepEqual(report.repositoryAccess.repositories.map((entry) => entry.name), ["evidenceForge"]);
+  assert.equal(calls.some(([command]) => ["npm", "cargo"].includes(command)), false);
+  assert.match(formatDoctor(report), /Onboarding: ready/u);
+});
+
+test("offline onboarding doctor reports local readiness without claiming repository access", async () => {
+  const report = await diagnoseEnvironment({
+    manifest, execute: successful, nodeVersion: "24.4.0", platform: "linux", network: false, scope: "onboard",
+  });
+  assert.equal(report.outcome, "local_ready");
+  assert.equal(report.onboardingReady, null);
+  assert.equal(report.repositoryAccess.repositories.length, 0);
+});

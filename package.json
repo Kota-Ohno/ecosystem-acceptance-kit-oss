@@ -1,6 +1,6 @@
 {
   "name": "ecosystem-acceptance-kit",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "private": true,
   "type": "module",
   "description": "Revision-pinned acceptance runner for the Evidence Forge ecosystem",

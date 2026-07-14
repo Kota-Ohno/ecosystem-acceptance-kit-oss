@@ -15,7 +15,7 @@ import { createPlan, runAcceptance } from "../lib/runner.mjs";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const usage = `Usage:
   ecosystem-accept demo [--json]
-  ecosystem-accept doctor [--offline] [--json]
+  ecosystem-accept doctor [--onboard] [--offline] [--json]
   ecosystem-accept bootstrap [--manifest FILE] [--workspace-root DIR] [--json]
   ecosystem-accept onboard [--manifest FILE] [--workspace-root DIR] [--directory NEW_DIR] [--source FILE (--exact TEXT | --exact-file FILE) --available-at ISO --promote-immediately] [--json]
   ecosystem-accept run [--manifest FILE] [--output-root DIR] [--workspace-root DIR] [--keep-workspace]
@@ -34,8 +34,14 @@ function parse(arguments_) {
     return { command, json: arguments_.includes("--json") };
   }
   if (command === "doctor") {
-    if (arguments_.some((value, index) => index > 0 && !["--offline", "--json"].includes(value))) throw new Error(usage);
-    return { command, network: !arguments_.includes("--offline"), json: arguments_.includes("--json") };
+    const flags = arguments_.slice(1);
+    if (new Set(flags).size !== flags.length || flags.some((value) => !["--onboard", "--offline", "--json"].includes(value))) {
+      throw new Error(usage);
+    }
+    return {
+      command, network: !flags.includes("--offline"), scope: flags.includes("--onboard") ? "onboard" : "full",
+      json: flags.includes("--json"),
+    };
   }
   if (command === "bootstrap") return parseBootstrap(arguments_.slice(1));
   if (command === "onboard") return parseOnboard(arguments_.slice(1));
@@ -77,7 +83,7 @@ async function main() {
   }
   if (options.command === "doctor") {
     const { manifest } = loadManifest(resolve(root, "acceptance.lock.json"));
-    const report = await diagnoseEnvironment({ manifest, network: options.network });
+    const report = await diagnoseEnvironment({ manifest, network: options.network, scope: options.scope });
     process.stdout.write(`${options.json ? JSON.stringify(report, null, 2) : formatDoctor(report)}\n`);
     if (report.outcome === "not_ready") process.exitCode = 2;
     return;

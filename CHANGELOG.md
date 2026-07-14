@@ -1,12 +1,19 @@
 # Changelog
 
+## 0.8.0 — 2026-07-14
+
+- Add `doctor --onboard`, a focused readiness check for Node.js, Git, pnpm,
+  supported OS, and the pinned Evidence Forge repository only.
+- Keep the existing full doctor contract as the default while removing unrelated
+  npm, Cargo, Agent Black Box, and Sol Ledger failures from the shortest path.
+
 ## 0.7.2 — 2026-07-14
 
 - Add a permanent installed-package smoke: offline pack/install/help/demo and
   redacted diagnostics run under `pnpm check`; the explicit online mode also
   completes caller-source onboarding from the installed tarball.
-- Enforce a closed release-file allowlist and keep the complete local check under
-  three seconds on the documented development machine.
+- Enforce a closed release-file allowlist and keep the complete local check at
+  about three seconds on the documented development machine.
 
 ## 0.7.1 — 2026-07-14
 

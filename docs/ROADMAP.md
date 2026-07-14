@@ -35,7 +35,7 @@
   product-only change, complete full local acceptance, and append its receipt.
 - [x] M12b.1 — Bound timeout completion across escaped pipe holders and clean
   every active detached process group when the runner is interrupted.
-- [ ] M12c — Pin all three private-main merge revisions, classify the integrated
+- [x] M12c — Pin all three private-main merge revisions, classify the integrated
   change, complete full local acceptance, and append its receipt.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "outcome": "analyzed",
+  "comparedAt": "2026-07-14T09:58:46.578Z",
+  "manifests": {
+    "olderSha256": "a90b234f949a57209b58a2a9d58a328040bc8d3bc78bda91da99d0925701403e",
+    "newerSha256": "dd2957a97de05f9c4eb344f9440592b4ea317c0efc35112a5636c1d0ade96747"
+  },
+  "repositories": {
+    "agentBlackBox": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "170d7a1c50da650e9336a098eb8987926fb4bc91",
+      "newerRevision": "852d3e68659a63a6083792092b7fed5de78a52f4",
+      "changedPathCount": 5,
+      "categories": {
+        "product": 5,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [
+        "docs/ROADMAP.md",
+        "lib/internal/canonical-json.mjs",
+        "lib/internal/trace-storage.mjs",
+        "lib/trace.mjs",
+        "test/trace.test.mjs"
+      ],
+      "pathsTruncated": false
+    },
+    "solLedger": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "ab75dfc78962563baccb39b936986055044441f1",
+      "newerRevision": "f8361c5687b0c6d72e9fec851b84977e806fdada",
+      "changedPathCount": 12,
+      "categories": {
+        "product": 0,
+        "protocol": 12,
+        "schema": 1,
+        "acceptance": 0
+      },
+      "paths": [
+        "Cargo.lock",
+        "Cargo.toml",
+        "crates/sol-ledger-cli/src/main.rs",
+        "crates/sol-ledger-schema/Cargo.toml",
+        "crates/sol-ledger-schema/src/generated.rs",
+        "crates/sol-ledger-schema/src/lib.rs",
+        "docs/PERFORMANCE.md",
+        "package.json",
+        "scripts/generate-types.mjs",
+        "scripts/generated-types.test.mjs",
+        "tools/sol-ledger-schema-generator/Cargo.toml",
+        "tools/sol-ledger-schema-generator/src/main.rs"
+      ],
+      "pathsTruncated": false
+    },
+    "evidenceForge": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "35fb945e64300f60207f8ae38ce8383faf441e05",
+      "newerRevision": "d8b0f965016b5c08718428146e8b65f8e899f325",
+      "changedPathCount": 0,
+      "categories": {
+        "product": 0,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [],
+      "pathsTruncated": false
+    }
+  },
+  "protocolContract": {
+    "changed": false,
+    "relocated": false,
+    "olderRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "newerRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "changedPathCount": 0,
+    "schemaChanged": false,
+    "schemaPaths": [],
+    "schemaPathsTruncated": false
+  },
+  "decision": {
+    "changeClass": "contract-review",
+    "fullAcceptanceRequired": true,
+    "manualReviewRequired": true
+  },
+  "assurance": {
+    "repositoryCodeExecuted": false,
+    "exactCommitsCompared": true,
+    "semanticCompatibilityProven": false,
+    "networkUsed": true,
+    "timestampAttested": false
+  },
+  "integrity": {
+    "algorithm": "sha256-jcs",
+    "receiptSha256": "55347e6de916b5e542ceeff34f9d0f4afde9b08909ad80ef7842acbafe9adfe2"
+  }
+}

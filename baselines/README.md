@@ -21,6 +21,10 @@ full acceptance entry rather than treated as semantic proof by itself.
 Black Box writer hardening. The v0.4.3→v0.4.4 preflight records that product-only
 change; the subsequent full acceptance entry supplies the interoperability proof.
 
+`v0.4.4.lock.json` preserves the final reviewed branch heads before private-main
+integration. The v0.4.4→v0.4.5 preflight records the merge-revision transition;
+the subsequent full acceptance entry verifies those exact integrated commits.
+
 `acceptance-index.json` is an append-only summary of locally verified acceptance
 receipts. Each entry binds its prior entry, exact revisions, receipt head, and
 artifact heads. Git history provides a separate retained copy of the index head,

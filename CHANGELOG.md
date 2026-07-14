@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.5 — 2026-07-14
+
+- Pin the private-main merge revisions for all three accepted ecosystem repositories.
+- Retain manual review evidence for conservative generated-schema classification while the stable wire contract remains unchanged.
+- Re-run non-executing classification and full clean-history ecosystem acceptance.
+
 ## 0.4.4 — 2026-07-14
 
 - Pin the final strict-timestamp and rollback-safe Agent Black Box revision.

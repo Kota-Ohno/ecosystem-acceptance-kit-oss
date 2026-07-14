@@ -41,5 +41,8 @@
   progress, exact reusable checkouts, JSON output, and no product-code execution.
 - [x] M12e — Pin the merged onboarding revisions, classify the update, complete
   full local acceptance, and append its receipt to the retained index.
+- [x] M12f — Pin the measured Evidence Forge quickstart optimization, classify
+  the product-only change, complete full local acceptance, and append its
+  receipt to the retained index.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

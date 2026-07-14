@@ -30,6 +30,11 @@ one-command onboarding and documentation update. The v0.4.5→v0.5.0 preflight
 records the product and documentation changes; the subsequent full acceptance
 entry verifies the exact merged onboarding commits.
 
+`v0.5.0.lock.json` preserves the onboarding baseline before the measured
+Evidence Forge quickstart optimization. The v0.5.0→v0.5.1 preflight records the
+product-only build-path change; the subsequent full acceptance entry verifies
+the exact merged optimization commit.
+
 `acceptance-index.json` is an append-only summary of locally verified acceptance
 receipts. Each entry binds its prior entry, exact revisions, receipt head, and
 artifact heads. Git history provides a separate retained copy of the index head,

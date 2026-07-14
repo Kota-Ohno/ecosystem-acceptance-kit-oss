@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "outcome": "analyzed",
+  "comparedAt": "2026-07-14T11:49:36.524Z",
+  "manifests": {
+    "olderSha256": "aa629c6bb26fae9590ba0b59f50df3e35e8ca8bacd114d6b55472446dd6c9707",
+    "newerSha256": "c3806e24f99cbd2723495b3973c1e62b0d2c04547f11715dd8624a07f3ebefa7"
+  },
+  "repositories": {
+    "agentBlackBox": {
+      "changed": false,
+      "relocated": false,
+      "olderRevision": "ceed31eff90458428a07f2872c868e6ce57b2f5f",
+      "newerRevision": "ceed31eff90458428a07f2872c868e6ce57b2f5f",
+      "changedPathCount": 0,
+      "categories": {
+        "product": 0,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [],
+      "pathsTruncated": false
+    },
+    "solLedger": {
+      "changed": false,
+      "relocated": false,
+      "olderRevision": "6924668c1ec771cce02f9129e43ab277c9b99bf4",
+      "newerRevision": "6924668c1ec771cce02f9129e43ab277c9b99bf4",
+      "changedPathCount": 0,
+      "categories": {
+        "product": 0,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [],
+      "pathsTruncated": false
+    },
+    "evidenceForge": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "f045f719e1e153ee4d2af8e98d95ba90407a9750",
+      "newerRevision": "a1f8b482b6176f0da8347cb6016cfe74d637a482",
+      "changedPathCount": 5,
+      "categories": {
+        "product": 5,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [
+        "CHANGELOG.md",
+        "docs/PERFORMANCE.md",
+        "docs/ROADMAP.md",
+        "package.json",
+        "tsconfig.build.json"
+      ],
+      "pathsTruncated": false
+    }
+  },
+  "protocolContract": {
+    "changed": false,
+    "relocated": false,
+    "olderRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "newerRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "changedPathCount": 0,
+    "schemaChanged": false,
+    "schemaPaths": [],
+    "schemaPathsTruncated": false
+  },
+  "decision": {
+    "changeClass": "implementation",
+    "fullAcceptanceRequired": true,
+    "manualReviewRequired": false
+  },
+  "assurance": {
+    "repositoryCodeExecuted": false,
+    "exactCommitsCompared": true,
+    "semanticCompatibilityProven": false,
+    "networkUsed": true,
+    "timestampAttested": false
+  },
+  "integrity": {
+    "algorithm": "sha256-jcs",
+    "receiptSha256": "846a02e07fa7932dd93bc4893e3d04e3d3958d3cd43f2436876102f0b686a82a"
+  }
+}

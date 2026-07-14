@@ -66,3 +66,11 @@ two operator transitions. The earlier 36.9% reduction measures removal of two
 unused product checkouts from the discarded integrated design, not an
 orchestration-speed claim. Full three-product inspection remains available via
 `pnpm bootstrap`.
+
+### Private exact-file input v0.7.1
+
+The same warm-cache Apple silicon scenario using the pinned Evidence Forge
+`--exact-file` path measured 4457 / 4396 / 4342 ms (median 4396 ms, n=3). The
+2.9% delta from the v0.7.0 inline-quote median remains normal checkout/package
+variance; bounded private-file reads add no material latency and the result stays
+below half the 10-second target.

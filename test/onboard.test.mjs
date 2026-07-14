@@ -59,7 +59,9 @@ test("creates verified Evidence from a caller-selected local file without retain
   const directory = join(root, "local-evidence");
   const source = join(root, "source.txt");
   const exact = "A caller-selected exact observation.";
+  const exactFile = join(root, "exact.txt");
   writeFileSync(source, `${exact}\n`, { mode: 0o600 });
+  writeFileSync(exactFile, exact, { mode: 0o600 });
   const calls = [];
   const progress = [];
   const report = await onboardFirstEvidence({
@@ -67,7 +69,7 @@ test("creates verified Evidence from a caller-selected local file without retain
     workspaceRoot: workspace,
     directory,
     source,
-    exact,
+    exactFile,
     availableAt: "2026-07-11T00:00:00Z",
     promoteImmediately: true,
     bootstrap: fakeBootstrap,
@@ -86,11 +88,13 @@ test("creates verified Evidence from a caller-selected local file without retain
   assert.equal(report.assurance.promotionPreauthorized, true);
   assert.deepEqual(report.scope, { repositoriesChecked: ["evidenceForge"], allRepositoriesChecked: false });
   assert.deepEqual(calls[1].arguments_, [
-    "--silent", "forge", "--source", calls[1].arguments_[3], "--exact", exact,
+    "--silent", "forge", "--source", calls[1].arguments_[3], "--exact-file", calls[1].arguments_[5],
     "--available-at", "2026-07-11T00:00:00Z", "--directory", directory, "--promote-immediately",
   ]);
   assert.notEqual(calls[1].arguments_[3], source);
   assert.match(calls[1].arguments_[3], /ecosystem-onboard-source-.+caller-source\.bin$/u);
+  assert.notEqual(calls[1].arguments_[5], exactFile);
+  assert.match(calls[1].arguments_[5], /ecosystem-onboard-source-.+caller-exact\.txt$/u);
   assert.deepEqual(calls[2].arguments_.slice(1), [
     "verify-packet", "--packet", join(directory, "evidence-packet.json"), "--expected-sha256", "a".repeat(64),
   ]);
@@ -130,7 +134,7 @@ test("rejects incomplete, missing, symlinked, or overlapping local sources befor
   const bootstrap = async () => { bootstrapped = true; return {}; };
   await assert.rejects(
     onboardFirstEvidence({ manifest, workspaceRoot: workspace, directory, source: join(root, "source.txt"), bootstrap }),
-    /requires --source, --exact, --available-at, and --promote-immediately together/u,
+    /requires --source, exactly one of --exact or --exact-file/u,
   );
   const invalidTimestampSource = join(root, "timestamp-source.txt");
   writeFileSync(invalidTimestampSource, "quote\n", { mode: 0o600 });

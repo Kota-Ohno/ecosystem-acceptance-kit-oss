@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.1 — 2026-07-14
+
+- Pin Evidence Forge's bounded private `--exact-file` input and make it the
+  recommended one-command onboarding path while preserving inline compatibility.
+- Record a 4.40-second warm-cache median, within 2.9% of the prior inline path.
+
 ## 0.7.0 — 2026-07-14
 
 - Add a caller-source onboarding mode that accepts one local file and exact

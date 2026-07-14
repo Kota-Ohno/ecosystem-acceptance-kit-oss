@@ -17,7 +17,7 @@ const usage = `Usage:
   ecosystem-accept demo [--json]
   ecosystem-accept doctor [--offline] [--json]
   ecosystem-accept bootstrap [--manifest FILE] [--workspace-root DIR] [--json]
-  ecosystem-accept onboard [--manifest FILE] [--workspace-root DIR] [--directory NEW_DIR] [--source FILE --exact TEXT --available-at ISO --promote-immediately] [--json]
+  ecosystem-accept onboard [--manifest FILE] [--workspace-root DIR] [--directory NEW_DIR] [--source FILE (--exact TEXT | --exact-file FILE) --available-at ISO --promote-immediately] [--json]
   ecosystem-accept run [--manifest FILE] [--output-root DIR] [--workspace-root DIR] [--keep-workspace]
   ecosystem-accept plan [--manifest FILE]
   ecosystem-accept compare OLD_LOCK NEW_LOCK [--output FILE]
@@ -100,6 +100,7 @@ async function main() {
       directory: options.directory,
       source: options.source,
       exact: options.exact,
+      exactFile: options.exactFile,
       availableAt: options.availableAt,
       promoteImmediately: options.promoteImmediately,
       reporter: textBootstrapReporter((line) => process.stderr.write(line)),
@@ -173,19 +174,20 @@ function parseOnboard(arguments_) {
     if (name === "--json") { options.json = true; continue; }
     if (name === "--promote-immediately") { options.promoteImmediately = true; continue; }
     const value = arguments_[index + 1];
-    if (!["--manifest", "--workspace-root", "--directory", "--source", "--exact", "--available-at"].includes(name) ||
+    if (!["--manifest", "--workspace-root", "--directory", "--source", "--exact", "--exact-file", "--available-at"].includes(name) ||
         !value || (name !== "--exact" && value.startsWith("--"))) throw new Error(usage);
     const key = {
       "--manifest": "manifest", "--workspace-root": "workspaceRoot", "--directory": "directory",
-      "--source": "source", "--exact": "exact", "--available-at": "availableAt",
+      "--source": "source", "--exact": "exact", "--exact-file": "exactFile", "--available-at": "availableAt",
     }[name];
-    options[key] = ["--manifest", "--workspace-root", "--directory", "--source"].includes(name) ? resolve(value) : value;
+    options[key] = ["--manifest", "--workspace-root", "--directory", "--source", "--exact-file"].includes(name) ? resolve(value) : value;
     index += 1;
   }
-  const localCount = [options.source, options.exact, options.availableAt, options.promoteImmediately].filter((value) => value !== undefined && value !== false).length;
-  if (localCount !== 0 && localCount !== 4) {
+  const localRequested = options.source || options.exact || options.exactFile || options.availableAt || options.promoteImmediately;
+  const exactCount = [options.exact, options.exactFile].filter(Boolean).length;
+  if (localRequested && (!options.source || exactCount !== 1 || !options.availableAt || !options.promoteImmediately)) {
     const missing = [
-      ["--source", options.source], ["--exact", options.exact], ["--available-at", options.availableAt],
+      ["--source", options.source], ["--exact or --exact-file", exactCount === 1], ["--available-at", options.availableAt],
       ["--promote-immediately", options.promoteImmediately],
     ].filter(([, value]) => value === undefined || value === false).map(([name]) => name);
     throw new Error(`Local-file onboarding is missing required options: ${missing.join(", ")}`);

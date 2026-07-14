@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.2 — 2026-07-14
+
+- Pin the final Agent Black Box pnpm documentation revision.
+- Re-run full acceptance against the exact final public-candidate commits.
+
 ## 0.4.1 — 2026-07-14
 
 - Standardize all JavaScript workflows and lockfiles on pnpm 11.0.8.

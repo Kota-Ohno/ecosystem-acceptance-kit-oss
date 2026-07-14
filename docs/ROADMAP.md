@@ -44,5 +44,10 @@
 - [x] M12f — Pin the measured Evidence Forge quickstart optimization, classify
   the product-only change, complete full local acceptance, and append its
   receipt to the retained index.
+- [x] M12g — Add one explicit onboarding command that reaches the first real
+  verified Evidence with bounded progress, safe pinned tools, disabled install
+  scripts, private new output, a fresh disposable execution checkout, packet
+  replay, and complete post-run checkout revalidation in under 10 seconds median
+  on the documented reference scenario.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

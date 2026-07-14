@@ -63,6 +63,23 @@ test("SIGTERM cleanup kills an active detached process group", { timeout: 4_000 
   assert.equal(processIsRunning(workerPid), false);
 });
 
+test("SIGTERM runs registered synchronous cleanup before direct process exit", { timeout: 4_000 }, async (context) => {
+  if (process.platform === "win32") { context.skip("POSIX signals are required"); return; }
+  const root = mkdtempSync(join(tmpdir(), "ecosystem-exit-cleanup-"));
+  context.after(() => rmSync(root, { recursive: true, force: true }));
+  const disposable = join(root, "disposable");
+  const ready = join(root, "ready");
+  const worker = "setInterval(()=>{},1000)";
+  const moduleUrl = new URL("../lib/child-process.mjs", import.meta.url).href;
+  const helperCode = `import(${JSON.stringify(moduleUrl)}).then(({registerProcessExitCleanup,runChildProcess})=>{const fs=require('node:fs');fs.mkdirSync(${JSON.stringify(disposable)});registerProcessExitCleanup(()=>fs.rmSync(${JSON.stringify(disposable)},{recursive:true,force:true}));fs.writeFileSync(${JSON.stringify(ready)},'ready');return runChildProcess(process.execPath,['-e',${JSON.stringify(worker)}],{timeoutMs:60000})})`;
+  const helper = spawn(process.execPath, ["-e", helperCode], { stdio: "ignore" });
+  await waitForFile(ready);
+  helper.kill("SIGTERM");
+  const helperExit = await new Promise((resolve) => helper.once("close", (code, signal) => resolve({ code, signal })));
+  assert.equal(helperExit.code, 143);
+  assert.equal(existsSync(disposable), false);
+});
+
 test("applies explicit environment overrides", async () => {
   const result = await runChildProcess(process.execPath, ["-e", "process.stdout.write(process.env.SHARED_PROCESS_TEST ?? '')"], {
     environment: {},

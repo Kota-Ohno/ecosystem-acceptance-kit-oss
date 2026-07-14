@@ -35,6 +35,32 @@ proves that a synthetic receipt verifies while a mutation is rejected. It does
 not claim that the real repositories passed. `pnpm doctor` checks the tools,
 versions, GitHub access, and other prerequisites needed by full acceptance.
 
+Create your first real, locally verified Evidence with one explicit command:
+
+```bash
+pnpm onboard
+```
+
+`onboard` shows ten progress steps, prepares the exact pinned checkouts,
+installs Evidence Forge dependencies with lifecycle scripts disabled, and runs
+its local-only quickstart from a fresh disposable execution checkout. It then
+runs a separate packet-verification pass, revalidates the pinned clean checkout,
+and removes every disposable execution byte. The result is written to
+`./my-first-evidence`; inspection-only checkouts remain in
+`./evidence-ecosystem-workspace`.
+
+Unlike `demo` and `bootstrap`, onboarding intentionally executes the pinned
+Evidence Forge quickstart and may access GitHub and the package registry. It
+has no configured paid-service integration and does not overwrite an existing
+Evidence directory.
+Onboarding currently supports macOS and Linux; native Windows is rejected before
+checkout because the wider acceptance stack contains shell-based checks.
+Choose fresh locations explicitly when the defaults already exist:
+
+```bash
+pnpm onboard --workspace-root ./evidence-stack --directory ./evidence-run-2
+```
+
 Create exact, clean checkouts of all three products with one command:
 
 ```bash
@@ -61,6 +87,9 @@ Running bootstrap therefore does not shorten a later full acceptance run.
 # Fast, offline confidence in the receipt verifier.
 pnpm demo
 
+# One-command path to a real local Evidence packet.
+pnpm onboard
+
 # Diagnose all full-run prerequisites; use --offline to avoid GitHub access.
 pnpm doctor
 node bin/ecosystem-accept.mjs doctor --offline
@@ -80,6 +109,12 @@ GitHub credentials and private repository access, then rerun the same bootstrap
 command. Failed temporary checkouts are removed; existing conflicting or dirty
 directories are left unchanged.
 
+If onboarding fails, its inspection checkout and any completed Evidence output
+remain visible rather than being silently replaced; its disposable execution
+checkout is removed. Resolve the reported prerequisite or checkout issue, then
+rerun with a new `--directory`; a matching clean pinned inspection workspace is
+reused, but executable build/dependency state is always created from scratch.
+
 ## Role in the ecosystem
 
 The kit is the integration and release-confidence layer. Agent Black Box owns
@@ -94,6 +129,9 @@ the results into one local receipt.
   proof, trusted timestamp, or proof that every product claim is true.
 - Full acceptance clones and executes code from the pinned repositories. Review
   lock changes first and run only revisions you trust.
+- Onboarding also executes pinned Evidence Forge code after installing packages
+  with lifecycle scripts disabled; use `bootstrap` when checkout-only inspection
+  is required.
 - The kit does not publish artifacts or send telemetry, but full acceptance does
   access GitHub and package registries. The demo is the offline path.
 - Retain receipt heads through an independent channel and protect local output.

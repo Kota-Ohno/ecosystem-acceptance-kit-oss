@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.1 — 2026-07-14
+
+- Pin the three private main revisions that record completed clean-history
+  acceptance separately from the still-pending publication approval gate.
+- Retain the non-executing preflight and append the exact integrated acceptance
+  receipt to the verified local index.
+
 ## 0.12.0 — 2026-07-14
 
 - Print a copy-ready `pnpm --dir <installed-kit> verify-evidence` command after

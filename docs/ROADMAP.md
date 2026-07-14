@@ -77,5 +77,8 @@
   onboarding while preserving the exact workspace reuse that keeps repeats fast.
 - [x] M12q — Split retained-Evidence verification tests from onboarding tests so
   each trust boundary can be run and maintained independently.
+- [x] M12r — Pin the three roadmap-synchronized private-main revisions,
+  classify the documentation-only transition, complete full local acceptance,
+  and append its receipt to the retained index.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

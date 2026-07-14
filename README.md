@@ -97,6 +97,11 @@ disabled, and removes the disposable checkout. It may access GitHub and the
 package registry; the persistent checkout and pnpm store make repeats cheaper.
 The Kit requires the expected digest argument but cannot verify where you stored
 or obtained it; independence is an operator practice, not a machine claim.
+Text-mode onboarding prints this command with the installed Kit directory,
+exact workspace, output directory, and digest already filled in and safely
+quoted for POSIX shells, so it can be copied and run from any directory. JSON
+mode remains a closed machine contract and does not add presentation-only
+command text.
 
 Unlike `demo` and `bootstrap`, onboarding intentionally executes the pinned
 Evidence Forge workflow and may access GitHub and the package registry. It

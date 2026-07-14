@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
-import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
-import { spawn } from "node:child_process";
+import { chmodSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { spawn, spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
-import { delimiter, isAbsolute, join } from "node:path";
+import { delimiter, dirname, isAbsolute, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 import manifest from "../acceptance.lock.json" with { type: "json" };
 import {
@@ -11,6 +12,7 @@ import {
 import { formatRetainedEvidenceVerification, verifyRetainedEvidence } from "../lib/evidence-verifier.mjs";
 
 const roots = [];
+const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 test.afterEach(() => roots.splice(0).forEach((root) => rmSync(root, { recursive: true, force: true })));
 
 test("creates a bounded collision-resistant default leaf without claiming evidence time", () => {
@@ -22,6 +24,41 @@ test("creates a bounded collision-resistant default leaf without claiming eviden
   assert.throws(() => createAutomaticEvidenceDirectory(
     "/tmp", new Date("2026-07-14T00:00:00Z"), "------------------------------------",
   ), /valid time and UUID/u);
+});
+
+test("prints a copy-ready shell-safe retained-verification command", (context) => {
+  if (process.platform === "win32") { context.skip("POSIX shell quoting is required"); return; }
+  const root = temporaryRoot();
+  const fakeBin = join(root, "fake bin");
+  const argumentsOutput = join(root, "received-arguments.json");
+  const workspace = join(root, "work space's $HOME");
+  const directory = join(root, "evidence `not-executed`");
+  const packetSha256 = "a".repeat(64);
+  mkdirSync(fakeBin);
+  const fakePnpm = join(fakeBin, "pnpm");
+  writeFileSync(fakePnpm, [
+    "#!/usr/bin/env node",
+    'require("node:fs").writeFileSync(process.env.ARGUMENTS_OUTPUT, JSON.stringify(process.argv.slice(2)))',
+    "",
+  ].join("\n"), { mode: 0o700 });
+  chmodSync(fakePnpm, 0o700);
+  const formatted = formatOnboard(formatReport({ workspace, directory, packetSha256 }));
+  const command = formatted.split("\n").find((line) => line.trimStart().startsWith("pnpm --dir"))?.trim();
+  assert.ok(command);
+  const executed = spawnSync("/bin/sh", ["-c", command], {
+    encoding: "utf8",
+    env: { ...process.env, PATH: `${fakeBin}${delimiter}${process.env.PATH}`, ARGUMENTS_OUTPUT: argumentsOutput },
+  });
+  assert.equal(executed.status, 0, executed.stderr);
+  assert.deepEqual(JSON.parse(readFileSync(argumentsOutput, "utf8")), [
+    "--dir", packageRoot, "verify-evidence", "--workspace-root", workspace, "--directory", directory,
+    "--expected-sha256", packetSha256,
+  ]);
+
+  const unsafe = formatOnboard(formatReport({ workspace, directory: `${directory}\u001b[31m`, packetSha256 }));
+  assert.doesNotMatch(unsafe, /\u001b/u);
+  assert.match(unsafe, /\\u001b\[31m/u);
+  assert.doesNotMatch(unsafe, /^\s*pnpm --dir/mu);
 });
 
 test("creates first verified Evidence through one explicit progress-reporting command", async () => {
@@ -577,6 +614,18 @@ function temporaryRoot() {
   const root = mkdtempSync(join(tmpdir(), "ecosystem-onboard-test-"));
   roots.push(root);
   return root;
+}
+
+function formatReport({ workspace, directory, packetSha256 }) {
+  return {
+    version: 2,
+    outcome: "first_evidence_ready",
+    workflow: "local_file",
+    workspace,
+    directory,
+    evidenceForge: { revision: manifest.repositories.evidenceForge.revision, checkoutAction: "reused" },
+    evidence: { artifacts: { packet: "evidence-packet.json" }, packetSha256 },
+  };
 }
 
 async function waitUntil(predicate) {

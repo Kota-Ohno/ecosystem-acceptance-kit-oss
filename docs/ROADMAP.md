@@ -73,5 +73,7 @@
 - [x] M12o — Split the 795-line mixed onboarding/verifier module into focused
   trust-boundary modules and expose non-gating installed-path timing samples for
   continued performance work.
+- [x] M12p — Print a shell-safe, copy-ready retained-verification command after
+  onboarding while preserving the exact workspace reuse that keeps repeats fast.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

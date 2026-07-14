@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "outcome": "analyzed",
+  "comparedAt": "2026-07-14T09:03:08.826Z",
+  "manifests": {
+    "olderSha256": "ed1c6ce0807f8fe38fe5e4097f040cf1a6afd47bc6ce34545e2382894a3b85a7",
+    "newerSha256": "a90b234f949a57209b58a2a9d58a328040bc8d3bc78bda91da99d0925701403e"
+  },
+  "repositories": {
+    "agentBlackBox": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "625fbefcd568e5a867bff22f0bbb160a98cd93e7",
+      "newerRevision": "170d7a1c50da650e9336a098eb8987926fb4bc91",
+      "changedPathCount": 4,
+      "categories": {
+        "product": 4,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [
+        "bin/abb.mjs",
+        "docs/ROADMAP.md",
+        "lib/trace.mjs",
+        "test/trace.test.mjs"
+      ],
+      "pathsTruncated": false
+    },
+    "solLedger": {
+      "changed": false,
+      "relocated": false,
+      "olderRevision": "ab75dfc78962563baccb39b936986055044441f1",
+      "newerRevision": "ab75dfc78962563baccb39b936986055044441f1",
+      "changedPathCount": 0,
+      "categories": {
+        "product": 0,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [],
+      "pathsTruncated": false
+    },
+    "evidenceForge": {
+      "changed": false,
+      "relocated": false,
+      "olderRevision": "35fb945e64300f60207f8ae38ce8383faf441e05",
+      "newerRevision": "35fb945e64300f60207f8ae38ce8383faf441e05",
+      "changedPathCount": 0,
+      "categories": {
+        "product": 0,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [],
+      "pathsTruncated": false
+    }
+  },
+  "protocolContract": {
+    "changed": false,
+    "relocated": false,
+    "olderRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "newerRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "changedPathCount": 0,
+    "schemaChanged": false,
+    "schemaPaths": [],
+    "schemaPathsTruncated": false
+  },
+  "decision": {
+    "changeClass": "implementation",
+    "fullAcceptanceRequired": true,
+    "manualReviewRequired": false
+  },
+  "assurance": {
+    "repositoryCodeExecuted": false,
+    "exactCommitsCompared": true,
+    "semanticCompatibilityProven": false,
+    "networkUsed": true,
+    "timestampAttested": false
+  },
+  "integrity": {
+    "algorithm": "sha256-jcs",
+    "receiptSha256": "73165b680d938918177e9159b7f21271e1bf032678ab8d962a0d24d9e7c81d5a"
+  }
+}

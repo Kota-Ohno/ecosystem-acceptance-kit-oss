@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "outcome": "analyzed",
+  "comparedAt": "2026-07-14T08:49:39.149Z",
+  "manifests": {
+    "olderSha256": "ed0420116ed639aa3fc68f4ce614fc8a9dce6148b6ad7f8a4f018905a24e732e",
+    "newerSha256": "ed1c6ce0807f8fe38fe5e4097f040cf1a6afd47bc6ce34545e2382894a3b85a7"
+  },
+  "repositories": {
+    "agentBlackBox": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "0175bcd214cbe37d1537faa48835217140953498",
+      "newerRevision": "625fbefcd568e5a867bff22f0bbb160a98cd93e7",
+      "changedPathCount": 9,
+      "categories": {
+        "product": 9,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [
+        "bin/abb.mjs",
+        "docs/PERFORMANCE.md",
+        "docs/RECOVERY.md",
+        "lib/internal/canonical-json.mjs",
+        "lib/internal/trace-lock.mjs",
+        "lib/internal/trace-storage.mjs",
+        "lib/trace.mjs",
+        "package.json",
+        "test/trace.test.mjs"
+      ],
+      "pathsTruncated": false
+    },
+    "solLedger": {
+      "changed": false,
+      "relocated": false,
+      "olderRevision": "ab75dfc78962563baccb39b936986055044441f1",
+      "newerRevision": "ab75dfc78962563baccb39b936986055044441f1",
+      "changedPathCount": 0,
+      "categories": {
+        "product": 0,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [],
+      "pathsTruncated": false
+    },
+    "evidenceForge": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "4dfbf9a000bb853d5864f8d52f08fa98a695d5de",
+      "newerRevision": "35fb945e64300f60207f8ae38ce8383faf441e05",
+      "changedPathCount": 28,
+      "categories": {
+        "product": 28,
+        "protocol": 0,
+        "schema": 2,
+        "acceptance": 0
+      },
+      "paths": [
+        "docs/PERFORMANCE.md",
+        "docs/ROADMAP.md",
+        "package.json",
+        "schemas/evidence-candidate.schema.json",
+        "schemas/review-bootstrap.schema.json",
+        "scripts/compare-max-lineage-benchmarks.mjs",
+        "scripts/compare-max-lineage-benchmarks.test.mjs",
+        "scripts/private-readiness.mjs",
+        "scripts/private-readiness.test.mjs",
+        "scripts/verify-package-install.mjs",
+        "scripts/verify-private-readiness.mjs",
+        "scripts/verify-private-readiness.test.mjs",
+        "src/bounded-file.test.ts",
+        "src/bounded-file.ts",
+        "src/domain.ts",
+        "src/evidence-envelope.test.ts",
+        "src/evidence-envelope.ts",
+        "src/evidence-packet.ts",
+        "src/forge.test.ts",
+        "src/forge.ts",
+        "src/limits.ts",
+        "src/private-file.ts",
+        "src/review-server.ts",
+        "src/timestamp.ts",
+        "src/web-capture.test.ts",
+        "src/web-capture.ts",
+        "src/workspace.test.ts",
+        "src/workspace.ts"
+      ],
+      "pathsTruncated": false
+    }
+  },
+  "protocolContract": {
+    "changed": false,
+    "relocated": false,
+    "olderRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "newerRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "changedPathCount": 0,
+    "schemaChanged": false,
+    "schemaPaths": [],
+    "schemaPathsTruncated": false
+  },
+  "decision": {
+    "changeClass": "contract-review",
+    "fullAcceptanceRequired": true,
+    "manualReviewRequired": true
+  },
+  "assurance": {
+    "repositoryCodeExecuted": false,
+    "exactCommitsCompared": true,
+    "semanticCompatibilityProven": false,
+    "networkUsed": true,
+    "timestampAttested": false
+  },
+  "integrity": {
+    "algorithm": "sha256-jcs",
+    "receiptSha256": "d898a1b42a146f00cb486fdd8723f85caab50043758e004e8dfca56407633c67"
+  }
+}

@@ -6,9 +6,9 @@ import { delimiter, isAbsolute, join } from "node:path";
 import test from "node:test";
 import manifest from "../acceptance.lock.json" with { type: "json" };
 import {
-  createAutomaticEvidenceDirectory, formatOnboard, formatRetainedEvidenceVerification, onboardFirstEvidence,
-  snapshotInput, verifyRetainedEvidence,
+  createAutomaticEvidenceDirectory, formatOnboard, onboardFirstEvidence, snapshotInput,
 } from "../lib/onboard.mjs";
+import { formatRetainedEvidenceVerification, verifyRetainedEvidence } from "../lib/evidence-verifier.mjs";
 
 const roots = [];
 test.afterEach(() => roots.splice(0).forEach((root) => rmSync(root, { recursive: true, force: true })));
@@ -316,7 +316,7 @@ test("SIGTERM during verifier bootstrap removes the private packet snapshot", { 
       const fs = require("node:fs");
       const os = require("node:os");
       const path = require("node:path");
-      const { verifyRetainedEvidence } = await import(${JSON.stringify(new URL("../lib/onboard.mjs", import.meta.url).href)});
+      const { verifyRetainedEvidence } = await import(${JSON.stringify(new URL("../lib/evidence-verifier.mjs", import.meta.url).href)});
       const manifest = JSON.parse(fs.readFileSync(${JSON.stringify(new URL("../acceptance.lock.json", import.meta.url).pathname)}, "utf8"));
       await verifyRetainedEvidence({
         manifest,

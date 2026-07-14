@@ -82,3 +82,39 @@ inventory, offline lifecycle-script-free npm install, installed help/demo, and
 diagnostic-redaction smoke, completed in 2.98 seconds. The networked installed
 onboarding remains an explicit release-candidate command so ordinary development
 checks stay fast, deterministic, and free of repository/package-network access.
+
+## Installed first-use and retained-verification path — 2026-07-14
+
+Scenario: run `pnpm smoke:package:onboard` from the repository on macOS 15.4.1
+arm64, Node.js 26.0.0, and pnpm 11.0.8. Every sample packs and installs the Kit
+into a new temporary consumer, creates two Evidence directories through the
+installed binary, then re-verifies the second packet. The global pnpm content
+store is warm; the first onboarding in each sample creates its workspace and the
+second reuses that exact pinned checkout. Timings use `performance.now()` around
+each installed CLI process. This is a release-style installed tarball path, not a
+debug build.
+
+Target: first onboarding under 6,000 ms, repeated onboarding under 4,000 ms, and
+retained verification under 4,000 ms on this machine and warm-store policy.
+
+Baseline (three samples):
+
+| Operation | Samples (ms) | Mean ± population SD | Range |
+| --- | --- | --- | --- |
+| First onboarding | 4,287; 4,102; 4,887 | 4,425 ± 335 ms | 4,102–4,887 ms |
+| Repeated onboarding | 2,976; 2,957; 2,966 | 2,966 ± 8 ms | 2,957–2,976 ms |
+| Retained verification | 2,835; 2,818; 2,873 | 2,842 ± 23 ms | 2,818–2,873 ms |
+
+| # | Hypothesis | Change | Measured after | Delta | Kept? |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Timings were invisible in installed-package smoke output. | Add non-gating per-operation measurements to the existing real smoke. | Values above; no runtime change intended. | Not applicable | Yes |
+
+Final: all three targets are met. No runtime optimization was attempted, so no
+before/after speedup is claimed and profiling stops here. The module split in
+the same release is a separately justified maintainability refactor. Future
+optimization work must repeat this scenario at least three times before and
+after one isolated change; measurements remain informative and deliberately do
+not gate CI because host and network variance are material.
+
+Regression check: `pnpm check` and three consecutive
+`pnpm smoke:package:onboard` samples passed.

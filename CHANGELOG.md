@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.11.1 — 2026-07-14
+
+- Split onboarding, retained verification, and their shared bounded runtime into
+  focused modules without changing the public command contracts.
+- Report non-gating single-sample timings from the installed online smoke so
+  first-run, repeat-run, and retained-verification costs stay visible.
+
 ## 0.11.0 — 2026-07-14
 
 - Add `verify-evidence` to re-verify a retained packet through a fresh checkout

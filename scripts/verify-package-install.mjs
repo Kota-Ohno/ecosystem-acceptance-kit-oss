@@ -5,6 +5,7 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
+import { performance } from "node:perf_hooks";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -20,10 +21,11 @@ export function assertPackageEntries(entries) {
   const requiredEntries = [
     "package/package.json", "package/README.md", "package/LICENSE", "package/SECURITY.md",
     "package/acceptance.lock.json", "package/bin/ecosystem-accept.mjs", "package/lib/onboard.mjs",
-    "package/lib/runner.mjs", "package/docs/THREAT_MODEL.md", "package/CHANGELOG.md",
+    "package/lib/runner.mjs", "package/docs/PERFORMANCE.md", "package/docs/THREAT_MODEL.md", "package/CHANGELOG.md",
     "package/baselines/README.md", "package/baselines/acceptance-index.json", "package/lib/bootstrap.mjs",
     "package/lib/child-process.mjs", "package/lib/demo.mjs", "package/lib/doctor.mjs", "package/lib/index.mjs",
-    "package/lib/manifest.mjs", "package/lib/preflight.mjs", "package/lib/receipt.mjs",
+    "package/lib/evidence-runtime.mjs", "package/lib/evidence-verifier.mjs", "package/lib/manifest.mjs",
+    "package/lib/preflight.mjs", "package/lib/receipt.mjs",
     "package/scripts/audit-secrets.mjs",
   ];
   for (const entry of requiredEntries) {
@@ -89,6 +91,8 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
     let onlineVerified = false;
     let repeatedAutomaticDirectoriesVerified = false;
     let retainedEvidenceReverified = false;
+    const onboardDurationsMs = [];
+    let retainedVerificationDurationMs = null;
     if (onlineOnboard) {
       const source = join(consumer, "source.txt");
       const exact = "Installed package private onboarding observation.";
@@ -101,6 +105,7 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
           "onboard", "--workspace-root", workspace, "--source", source, "--cite-entire-source",
           "--available-at", "2026-07-14T00:00:00Z", "--promote-immediately", "--json",
         ], { cwd: consumer, timeoutMs: 120_000 });
+        onboardDurationsMs.push(result.durationMs);
         const report = parseJson(result.stdout, "Installed Kit onboard");
         const serialized = JSON.stringify(report);
         if (report.version !== 2 || report.outcome !== "first_evidence_ready" ||
@@ -116,10 +121,12 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
       onlineVerified = true;
       repeatedAutomaticDirectoriesVerified = new Set(directories).size === 2;
       if (!repeatedAutomaticDirectoriesVerified) throw new Error("Installed Kit reused an automatic Evidence directory");
-      const retained = parseJson(run(executable, [
+      const retainedResult = run(executable, [
         "verify-evidence", "--workspace-root", workspace, "--directory", reports[1].directory,
         "--expected-sha256", reports[1].evidence.packetSha256, "--json",
-      ], { cwd: consumer, timeoutMs: 120_000 }).stdout, "Installed Kit retained Evidence verification");
+      ], { cwd: consumer, timeoutMs: 120_000 });
+      retainedVerificationDurationMs = retainedResult.durationMs;
+      const retained = parseJson(retainedResult.stdout, "Installed Kit retained Evidence verification");
       retainedEvidenceReverified = retained.kind === "RetainedEvidenceVerification" && retained.outcome === "verified" &&
         retained.packetSha256 === reports[1].evidence.packetSha256 && retained.assurance?.expectedDigestArgumentRequired === true &&
         retained.assurance?.kitWritesToEvidenceDirectory === false;
@@ -146,6 +153,13 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
         repeatedAutomaticDirectoriesVerified: onlineOnboard ? repeatedAutomaticDirectoriesVerified : null,
         retainedEvidenceReverified: onlineOnboard ? retainedEvidenceReverified : null,
       },
+      performance: {
+        checked: onlineOnboard,
+        sampleKind: onlineOnboard ? "single-local-installed-package-smoke" : null,
+        onboardDurationsMs: onlineOnboard ? onboardDurationsMs : null,
+        retainedVerificationDurationMs: onlineOnboard ? retainedVerificationDurationMs : null,
+        thresholdEnforced: false,
+      },
       assurance: { networkUsed: onlineOnboard, paidServiceInvoked: false, temporaryBytesRetained: false },
     };
   } finally {
@@ -156,12 +170,13 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
 function run(command, arguments_, {
   allowFailure = false, cwd = root, environment = process.env, timeoutMs = 30_000,
 } = {}) {
+  const started = performance.now();
   const result = spawnSync(command, arguments_, {
     cwd, env: environment, encoding: "utf8", timeout: timeoutMs, maxBuffer: 4 * 1024 * 1024,
   });
   if (result.error) throw result.error;
   if (!allowFailure && result.status !== 0) throw new Error(`${command} failed during installed-package smoke`);
-  return result;
+  return { ...result, durationMs: Math.round(performance.now() - started) };
 }
 
 function parseJson(source, label) {

@@ -5,10 +5,11 @@ import { assertPackageEntries, parsePackageSmokeArguments } from "./verify-packa
 const required = [
   "package/package.json", "package/README.md", "package/LICENSE", "package/SECURITY.md",
   "package/acceptance.lock.json", "package/bin/ecosystem-accept.mjs", "package/lib/onboard.mjs",
-  "package/lib/runner.mjs", "package/docs/THREAT_MODEL.md", "package/CHANGELOG.md",
+  "package/lib/runner.mjs", "package/docs/PERFORMANCE.md", "package/docs/THREAT_MODEL.md", "package/CHANGELOG.md",
   "package/baselines/README.md", "package/baselines/acceptance-index.json", "package/lib/bootstrap.mjs",
   "package/lib/child-process.mjs", "package/lib/demo.mjs", "package/lib/doctor.mjs", "package/lib/index.mjs",
-  "package/lib/manifest.mjs", "package/lib/preflight.mjs", "package/lib/receipt.mjs",
+  "package/lib/evidence-runtime.mjs", "package/lib/evidence-verifier.mjs", "package/lib/manifest.mjs",
+  "package/lib/preflight.mjs", "package/lib/receipt.mjs",
   "package/scripts/audit-secrets.mjs",
 ];
 

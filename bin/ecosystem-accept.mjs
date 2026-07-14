@@ -7,10 +7,8 @@ import { bootstrapWorkspace, formatBootstrap, textBootstrapReporter } from "../l
 import { diagnoseEnvironment, formatDoctor } from "../lib/doctor.mjs";
 import { appendIndex, verifyIndexFile } from "../lib/index.mjs";
 import { loadManifest } from "../lib/manifest.mjs";
-import {
-  createAutomaticEvidenceDirectory, formatOnboard, formatRetainedEvidenceVerification, onboardFirstEvidence,
-  verifyRetainedEvidence,
-} from "../lib/onboard.mjs";
+import { formatRetainedEvidenceVerification, verifyRetainedEvidence } from "../lib/evidence-verifier.mjs";
+import { createAutomaticEvidenceDirectory, formatOnboard, onboardFirstEvidence } from "../lib/onboard.mjs";
 import { compareManifests } from "../lib/preflight.mjs";
 import { loadAndVerifyReceipt } from "../lib/receipt.mjs";
 import { createPlan, runAcceptance } from "../lib/runner.mjs";

@@ -68,6 +68,10 @@
   without exposing content in argv.
 - [x] M12n — Re-verify a retained Evidence packet later through one pinned,
   progress-reporting command that requires a caller-supplied digest and performs
-  no Kit writes to the retained directory; independent storage remains operator practice.
+  no Kit writes to the retained directory; independent storage remains operator
+  practice.
+- [x] M12o — Split the 795-line mixed onboarding/verifier module into focused
+  trust-boundary modules and expose non-gating installed-path timing samples for
+  continued performance work.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

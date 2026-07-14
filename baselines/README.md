@@ -25,6 +25,11 @@ change; the subsequent full acceptance entry supplies the interoperability proof
 integration. The v0.4.4→v0.4.5 preflight records the merge-revision transition;
 the subsequent full acceptance entry verifies those exact integrated commits.
 
+`v0.4.5.lock.json` preserves the integrated hardening baseline before the
+one-command onboarding and documentation update. The v0.4.5→v0.5.0 preflight
+records the product and documentation changes; the subsequent full acceptance
+entry verifies the exact merged onboarding commits.
+
 `acceptance-index.json` is an append-only summary of locally verified acceptance
 receipts. Each entry binds its prior entry, exact revisions, receipt head, and
 artifact heads. Git history provides a separate retained copy of the index head,

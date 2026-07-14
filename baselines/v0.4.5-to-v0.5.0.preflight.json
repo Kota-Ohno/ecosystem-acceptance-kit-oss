@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "outcome": "analyzed",
+  "comparedAt": "2026-07-14T10:57:50.478Z",
+  "manifests": {
+    "olderSha256": "dd2957a97de05f9c4eb344f9440592b4ea317c0efc35112a5636c1d0ade96747",
+    "newerSha256": "aa629c6bb26fae9590ba0b59f50df3e35e8ca8bacd114d6b55472446dd6c9707"
+  },
+  "repositories": {
+    "agentBlackBox": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "852d3e68659a63a6083792092b7fed5de78a52f4",
+      "newerRevision": "ceed31eff90458428a07f2872c868e6ce57b2f5f",
+      "changedPathCount": 1,
+      "categories": {
+        "product": 1,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [
+        "README.md"
+      ],
+      "pathsTruncated": false
+    },
+    "solLedger": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "f8361c5687b0c6d72e9fec851b84977e806fdada",
+      "newerRevision": "6924668c1ec771cce02f9129e43ab277c9b99bf4",
+      "changedPathCount": 1,
+      "categories": {
+        "product": 0,
+        "protocol": 1,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [
+        "README.md"
+      ],
+      "pathsTruncated": false
+    },
+    "evidenceForge": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "d8b0f965016b5c08718428146e8b65f8e899f325",
+      "newerRevision": "f045f719e1e153ee4d2af8e98d95ba90407a9750",
+      "changedPathCount": 14,
+      "categories": {
+        "product": 14,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 2
+      },
+      "paths": [
+        "CHANGELOG.md",
+        "README.md",
+        "docs/DOGFOOD.md",
+        "docs/OPERATOR.md",
+        "docs/PERFORMANCE.md",
+        "docs/RELEASE-READINESS.md",
+        "docs/ROADMAP.md",
+        "docs/sol-ledger-adapter.md",
+        "package.json",
+        "scripts/dogfood-stack.test.mjs",
+        "scripts/verify-package-install.mjs",
+        "src/cli.ts",
+        "src/quickstart.test.ts",
+        "src/quickstart.ts"
+      ],
+      "pathsTruncated": false
+    }
+  },
+  "protocolContract": {
+    "changed": false,
+    "relocated": false,
+    "olderRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "newerRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "changedPathCount": 0,
+    "schemaChanged": false,
+    "schemaPaths": [],
+    "schemaPathsTruncated": false
+  },
+  "decision": {
+    "changeClass": "implementation",
+    "fullAcceptanceRequired": true,
+    "manualReviewRequired": false
+  },
+  "assurance": {
+    "repositoryCodeExecuted": false,
+    "exactCommitsCompared": true,
+    "semanticCompatibilityProven": false,
+    "networkUsed": true,
+    "timestampAttested": false
+  },
+  "integrity": {
+    "algorithm": "sha256-jcs",
+    "receiptSha256": "bbec86864f07c41a4e8c81c9444a10aafdd99678aa0d802769497b64e67d807b"
+  }
+}

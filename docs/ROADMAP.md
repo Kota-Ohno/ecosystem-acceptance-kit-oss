@@ -37,5 +37,9 @@
   every active detached process group when the runner is interrupted.
 - [x] M12c — Pin all three private-main merge revisions, classify the integrated
   change, complete full local acceptance, and append its receipt.
+- [x] M12d — Add a beginner-safe one-command workspace bootstrap with visible
+  progress, exact reusable checkouts, JSON output, and no product-code execution.
+- [x] M12e — Pin the merged onboarding revisions, classify the update, complete
+  full local acceptance, and append its receipt to the retained index.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

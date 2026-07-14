@@ -3,6 +3,7 @@ import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { formatDemo, runOfflineDemo } from "../lib/demo.mjs";
+import { bootstrapWorkspace, formatBootstrap, textBootstrapReporter } from "../lib/bootstrap.mjs";
 import { diagnoseEnvironment, formatDoctor } from "../lib/doctor.mjs";
 import { appendIndex, verifyIndexFile } from "../lib/index.mjs";
 import { loadManifest } from "../lib/manifest.mjs";
@@ -14,6 +15,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const usage = `Usage:
   ecosystem-accept demo [--json]
   ecosystem-accept doctor [--offline] [--json]
+  ecosystem-accept bootstrap [--manifest FILE] [--workspace-root DIR] [--json]
   ecosystem-accept run [--manifest FILE] [--output-root DIR] [--workspace-root DIR] [--keep-workspace]
   ecosystem-accept plan [--manifest FILE]
   ecosystem-accept compare OLD_LOCK NEW_LOCK [--output FILE]
@@ -24,7 +26,7 @@ const usage = `Usage:
 function parse(arguments_) {
   if (arguments_.includes("--help") || arguments_.includes("-h")) return { command: "help" };
   const command = arguments_[0];
-  if (!["demo", "doctor", "run", "plan", "compare", "index", "verify-receipt"].includes(command)) throw new Error(usage);
+  if (!["demo", "doctor", "bootstrap", "run", "plan", "compare", "index", "verify-receipt"].includes(command)) throw new Error(usage);
   if (command === "demo") {
     if (arguments_.some((value, index) => index > 0 && value !== "--json")) throw new Error(usage);
     return { command, json: arguments_.includes("--json") };
@@ -33,6 +35,7 @@ function parse(arguments_) {
     if (arguments_.some((value, index) => index > 0 && !["--offline", "--json"].includes(value))) throw new Error(usage);
     return { command, network: !arguments_.includes("--offline"), json: arguments_.includes("--json") };
   }
+  if (command === "bootstrap") return parseBootstrap(arguments_.slice(1));
   if (command === "index") return parseIndex(arguments_.slice(1));
   if (command === "compare") {
     if (arguments_.length < 3 || arguments_.length > 5) throw new Error(usage);
@@ -76,6 +79,16 @@ async function main() {
     if (report.outcome === "not_ready") process.exitCode = 2;
     return;
   }
+  if (options.command === "bootstrap") {
+    const { manifest } = loadManifest(options.manifest);
+    const report = await bootstrapWorkspace({
+      manifest,
+      workspaceRoot: options.workspaceRoot,
+      reporter: textBootstrapReporter((line) => process.stderr.write(line)),
+    });
+    process.stdout.write(`${options.json ? JSON.stringify(report, null, 2) : formatBootstrap(report)}\n`);
+    return;
+  }
   if (options.command === "verify-receipt") {
     process.stdout.write(`${JSON.stringify(loadAndVerifyReceipt(options.receipt), null, 2)}\n`);
     return;
@@ -102,6 +115,27 @@ async function main() {
   mkdirSync(options.outputRoot, { recursive: true, mode: 0o700 });
   mkdirSync(options.workspaceRoot, { recursive: true, mode: 0o700 });
   await runAcceptance({ ...options, manifest, root });
+}
+
+function parseBootstrap(arguments_) {
+  const options = {
+    command: "bootstrap",
+    manifest: resolve(root, "acceptance.lock.json"),
+    workspaceRoot: resolve(process.cwd(), "evidence-ecosystem-workspace"),
+    json: false,
+  };
+  const seen = new Set();
+  for (let index = 0; index < arguments_.length; index += 1) {
+    const name = arguments_[index];
+    if (seen.has(name)) throw new Error(usage);
+    seen.add(name);
+    if (name === "--json") { options.json = true; continue; }
+    const value = arguments_[index + 1];
+    if (!["--manifest", "--workspace-root"].includes(name) || !value || value.startsWith("--")) throw new Error(usage);
+    options[name === "--manifest" ? "manifest" : "workspaceRoot"] = resolve(value);
+    index += 1;
+  }
+  return options;
 }
 
 function parseIndex(arguments_) {

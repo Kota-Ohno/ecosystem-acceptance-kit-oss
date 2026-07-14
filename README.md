@@ -1,42 +1,108 @@
 # Ecosystem Acceptance Kit
 
-Fast offline proof plus revision-pinned full acceptance for the Evidence Forge ecosystem:
+Ecosystem Acceptance Kit is for maintainers and reviewers who want one local
+answer to “do these exact private revisions still work together?” It offers a
+seconds-fast offline demo, prerequisite diagnosis, and a revision-pinned full
+acceptance run that produces a tamper-evident receipt.
+
+It coordinates the Evidence Forge ecosystem:
 
 - Agent Black Box captures a metadata-only execution trace.
 - Sol Ledger verifies the shared event contract and hash chain.
 - Evidence Forge exercises capture-to-promotion behavior from its packed artifact,
   produces a two-signer review bundle, and verifies a signed release evidence pack.
 
-The kit clones the exact commits in [`acceptance.lock.json`](acceptance.lock.json),
-runs the repositories' own checks, and writes a tamper-evident local receipt. It
-does not publish artifacts or contact a telemetry service.
+> **Installation status:** this repository is currently private and the package
+> has `private: true`; it is not published to npm. Clone it from an account with
+> access. pnpm is the supported package manager.
 
-The lock distinguishes Sol Ledger's current implementation revision from the
-stable v0.1.0 wire-contract revision pinned by both consumers. The former runs
-the current product checks and packed acceptance; the latter runs Evidence
-Forge's exact schema and Rust/JCS compatibility gate.
-
-## Try it in seconds
+## Shortest path
 
 ```bash
 git clone https://github.com/Kota-Ohno/ecosystem-acceptance-kit-oss.git
 cd ecosystem-acceptance-kit-oss
 corepack enable
-pnpm install --frozen-lockfile
+pnpm install --frozen-lockfile --ignore-scripts
 pnpm demo
-```
-
-The deterministic demo uses only Node.js. It verifies a synthetic three-product
-receipt, proves that mutation is rejected, performs no network access, and makes
-no full-acceptance claim. Check every full-run prerequisite and private repository
-access in one pass with:
-
-```bash
 pnpm doctor
 ```
 
-Use `node bin/ecosystem-accept.mjs doctor --offline` to check local tools without
-contacting GitHub. Add `--json` to either `demo` or `doctor` for automation.
+The repository pins pnpm 11.0.8. If `corepack` is unavailable but that pnpm
+version is already installed, skip the `corepack enable` line.
+
+`pnpm demo` is deterministic, uses only Node.js, performs no network access, and
+proves that a synthetic receipt verifies while a mutation is rejected. It does
+not claim that the real repositories passed. `pnpm doctor` checks the tools,
+versions, GitHub access, and other prerequisites needed by full acceptance.
+
+Create exact, clean checkouts of all three products with one command:
+
+```bash
+pnpm bootstrap --workspace-root ./evidence-stack
+```
+
+Bootstrap runs the offline demo and offline environment doctor, then checks out
+the revisions pinned by `acceptance.lock.json` with visible progress. It does
+not install dependencies, run product code, or replace an existing conflicting
+checkout.
+
+Existing checkouts are reused only when their revision, origin, and clean state
+match the lock. Use `--json` when another tool consumes the final report;
+progress remains on stderr so stdout stays machine-readable.
+
+Bootstrap is for quick inspection and local product onboarding. Full acceptance
+is deliberately separate: `pnpm accept` creates fresh disposable checkouts and
+reinstalls dependencies rather than trusting or reusing the bootstrap workspace.
+Running bootstrap therefore does not shorten a later full acceptance run.
+
+## Everyday workflows
+
+```bash
+# Fast, offline confidence in the receipt verifier.
+pnpm demo
+
+# Diagnose all full-run prerequisites; use --offline to avoid GitHub access.
+pnpm doctor
+node bin/ecosystem-accept.mjs doctor --offline
+
+# Inspect pinned work without executing repository code, then run acceptance.
+pnpm plan
+pnpm accept
+
+# Re-verify a retained result later.
+pnpm verify-receipt .acceptance-output/<run-id>/acceptance-receipt.json
+```
+
+Add `--json` to `demo` or `doctor` when another tool consumes the result.
+
+If bootstrap fails during checkout, run networked `pnpm doctor` first. Confirm
+GitHub credentials and private repository access, then rerun the same bootstrap
+command. Failed temporary checkouts are removed; existing conflicting or dirty
+directories are left unchanged.
+
+## Role in the ecosystem
+
+The kit is the integration and release-confidence layer. Agent Black Box owns
+privacy-bounded trace capture, Sol Ledger owns the shared contract, and Evidence
+Forge owns source-backed promotion. The kit clones the exact commits in
+[`acceptance.lock.json`](acceptance.lock.json), runs their own checks, and binds
+the results into one local receipt.
+
+## Safety limits
+
+- A successful receipt is interoperability evidence, not a sandbox, authorship
+  proof, trusted timestamp, or proof that every product claim is true.
+- Full acceptance clones and executes code from the pinned repositories. Review
+  lock changes first and run only revisions you trust.
+- The kit does not publish artifacts or send telemetry, but full acceptance does
+  access GitHub and package registries. The demo is the offline path.
+- Retain receipt heads through an independent channel and protect local output.
+  Read the [threat model](docs/THREAT_MODEL.md) before relying on a result.
+
+The lock distinguishes Sol Ledger's current implementation revision from the
+stable v0.1.0 wire-contract revision pinned by both consumers. The former runs
+the current product checks and packed acceptance; the latter runs Evidence
+Forge's exact schema and Rust/JCS compatibility gate.
 
 ## Full acceptance requirements
 

@@ -75,5 +75,7 @@
   continued performance work.
 - [x] M12p — Print a shell-safe, copy-ready retained-verification command after
   onboarding while preserving the exact workspace reuse that keeps repeats fast.
+- [x] M12q — Split retained-Evidence verification tests from onboarding tests so
+  each trust boundary can be run and maintained independently.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

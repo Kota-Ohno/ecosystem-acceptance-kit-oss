@@ -1,6 +1,6 @@
 {
   "name": "ecosystem-acceptance-kit",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "private": true,
   "type": "module",
   "description": "Revision-pinned acceptance runner for the Evidence Forge ecosystem",
@@ -30,12 +30,14 @@
     "demo": "node bin/ecosystem-accept.mjs demo",
     "doctor": "node bin/ecosystem-accept.mjs doctor",
     "audit:secrets": "node scripts/audit-secrets.mjs",
+    "smoke:package": "node scripts/verify-package-install.mjs",
+    "smoke:package:onboard": "node scripts/verify-package-install.mjs --online-onboard",
     "accept": "node bin/ecosystem-accept.mjs run",
     "plan": "node bin/ecosystem-accept.mjs plan",
     "compare": "node bin/ecosystem-accept.mjs compare",
     "index": "node bin/ecosystem-accept.mjs index",
     "verify-receipt": "node bin/ecosystem-accept.mjs verify-receipt",
     "test": "node --test",
-    "check": "node --check bin/ecosystem-accept.mjs && node --check lib/bootstrap.mjs && node --check lib/child-process.mjs && node --check lib/demo.mjs && node --check lib/doctor.mjs && node --check lib/index.mjs && node --check lib/manifest.mjs && node --check lib/onboard.mjs && node --check lib/preflight.mjs && node --check lib/receipt.mjs && node --check lib/runner.mjs && node --check scripts/audit-secrets.mjs && node --test"
+    "check": "node --check bin/ecosystem-accept.mjs && node --check lib/bootstrap.mjs && node --check lib/child-process.mjs && node --check lib/demo.mjs && node --check lib/doctor.mjs && node --check lib/index.mjs && node --check lib/manifest.mjs && node --check lib/onboard.mjs && node --check lib/preflight.mjs && node --check lib/receipt.mjs && node --check lib/runner.mjs && node --check scripts/audit-secrets.mjs && node --check scripts/verify-package-install.mjs && node --test && pnpm smoke:package"
   }
 }

@@ -74,3 +74,11 @@ The same warm-cache Apple silicon scenario using the pinned Evidence Forge
 2.9% delta from the v0.7.0 inline-quote median remains normal checkout/package
 variance; bounded private-file reads add no material latency and the result stays
 below half the 10-second target.
+
+## Installed-package development gate v0.7.2 — 2026-07-14
+
+`pnpm check`, including syntax checks, 51 tests, tarball creation, a closed file
+inventory, offline lifecycle-script-free npm install, installed help/demo, and
+diagnostic-redaction smoke, completed in 2.88 seconds. The networked installed
+onboarding remains an explicit release-candidate command so ordinary development
+checks stay fast, deterministic, and free of repository/package-network access.

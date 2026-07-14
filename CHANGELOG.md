@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.2 — 2026-07-14
+
+- Add a permanent installed-package smoke: offline pack/install/help/demo and
+  redacted diagnostics run under `pnpm check`; the explicit online mode also
+  completes caller-source onboarding from the installed tarball.
+- Enforce a closed release-file allowlist and keep the complete local check under
+  three seconds on the documented development machine.
+
 ## 0.7.1 — 2026-07-14
 
 - Pin Evidence Forge's bounded private `--exact-file` input and make it the

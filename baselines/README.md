@@ -17,6 +17,10 @@ remediation. The v0.4.2→v0.4.3 preflight records the resulting product and
 schema classification; its manual-review decision is backed by the subsequent
 full acceptance entry rather than treated as semantic proof by itself.
 
+`v0.4.3.lock.json` preserves the reviewed ecosystem pins before the final Agent
+Black Box writer hardening. The v0.4.3→v0.4.4 preflight records that product-only
+change; the subsequent full acceptance entry supplies the interoperability proof.
+
 `acceptance-index.json` is an append-only summary of locally verified acceptance
 receipts. Each entry binds its prior entry, exact revisions, receipt head, and
 artifact heads. Git history provides a separate retained copy of the index head,

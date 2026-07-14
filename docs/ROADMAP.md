@@ -31,5 +31,7 @@
 - [x] M12a — Refresh the clean-history pins to the final review remediations,
   classify the runtime/schema changes without execution, complete full local
   acceptance, and append the independently headed receipt to the retained index.
+- [x] M12b — Pin the final Agent Black Box writer hardening, classify the
+  product-only change, complete full local acceptance, and append its receipt.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

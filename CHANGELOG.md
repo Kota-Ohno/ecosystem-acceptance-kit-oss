@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.4 — 2026-07-14
+
+- Pin the final strict-timestamp and rollback-safe Agent Black Box revision.
+- Re-run non-executing classification and full clean-history ecosystem acceptance.
+
 ## 0.4.3 — 2026-07-14
 
 - Pin the reviewed atomic-ingest Agent Black Box revision.

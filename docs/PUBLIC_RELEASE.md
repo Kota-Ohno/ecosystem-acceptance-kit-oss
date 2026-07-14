@@ -9,7 +9,7 @@ or announcement action is authorized by this document.
 
 | Repository | License | Secret audit | Local release gate | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| Agent Black Box OSS | MIT | Clean noreply history/tree | 33 tests; atomic multi-batch and packed CLI smoke | Explicit visibility approval |
+| Agent Black Box OSS | MIT | Clean noreply history/tree | 38 tests; strict timestamps, atomic rollback, and packed CLI smoke | Explicit visibility approval |
 | Sol Ledger Protocol OSS | MIT | Clean noreply history/tree | npm, TypeScript, Rust fmt/clippy/tests; crate metadata | Explicit visibility approval |
 | Evidence Forge OSS | MIT | Clean noreply history/tree | 228 local checks; complete private-readiness receipt | Explicit visibility approval |
 | Ecosystem Acceptance Kit OSS | MIT | Clean noreply history/tree; bounded hash rule; generated output excluded | 29 tests; packed demo/doctor; full clean-history acceptance | Explicit visibility approval |
@@ -40,9 +40,9 @@ Sol Ledger contract have identical schema files:
 - security-policy: `2180eefea150b07a07ed420b88867027d874979f82a5b9a03802deb123cdd4bb`
 
 The latest review-remediated clean-history acceptance receipt head is
-`37cfbef269ceaacbb078427a77bf1578850125d81e18bf33a350cc176f099f44` and the
-seven-entry retained index head is
-`c35139819250680403f95cdf649ecf9d5132a4e526b06998999ed82a0ae26481`.
+`a64477ff9d316b9312aab9ef8ecfe0d4934379b03b5bf61fe67be2214a818e23` and the
+eight-entry retained index head is
+`bd8bf37955fc213c8cdd5acc4c986c8dfaa3733c307ba18799e642570c42962e`.
 
 ## Publication order
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.3 — 2026-07-14
+
+- Pin the reviewed atomic-ingest Agent Black Box revision.
+- Pin the reviewed timestamp-fidelity and schema-alignment Evidence Forge revision.
+- Forward pnpm 11 script arguments without injecting a literal separator token.
+- Install the npm-locked stable contract checkout before running its TypeScript interop gate.
+- Re-run non-executing classification and full clean-history ecosystem acceptance.
+
 ## 0.4.2 — 2026-07-14
 
 - Pin the final Agent Black Box pnpm documentation revision.

@@ -5,17 +5,30 @@ import { join } from "node:path";
 import test from "node:test";
 import manifest from "../acceptance.lock.json" with { type: "json" };
 import {
-  assertDisjointRoots, createExecutionEnvironment, createPlan, execute, removeEphemeralPrivateKeys,
+  assertDisjointRoots, createExecutionEnvironment, createPlan, execute, pnpmScriptArguments,
+  removeEphemeralPrivateKeys,
 } from "../lib/runner.mjs";
 
 test("plan is non-executing and names every acceptance boundary", () => {
   const plan = createPlan(manifest);
   assert.deepEqual(Object.keys(plan.repositories).sort(), ["agentBlackBox", "evidenceForge", "solLedger"]);
   assert.equal(plan.protocolContractRevision, manifest.protocolContractRevision);
+  assert.ok(plan.steps.includes("sol-ledger-contract-install"));
   assert.equal(plan.steps.at(-1), "artifact-digest-and-receipt");
   assert.equal(plan.assurance.executesPinnedRepositoryCode, true);
   assert.equal(plan.assurance.telemetryExported, false);
   assert.equal(plan.assurance.sandboxed, false);
+});
+
+test("passes script arguments directly under pnpm 11 without a separator token", () => {
+  assert.deepEqual(
+    pnpmScriptArguments("check:protocol", ["/tmp/protocol"]),
+    ["check:protocol", "/tmp/protocol"],
+  );
+  assert.deepEqual(
+    pnpmScriptArguments("acceptance:packed", ["--output", "/tmp/output"]),
+    ["acceptance:packed", "--output", "/tmp/output"],
+  );
 });
 
 test("rejects overlapping output and disposable workspace roots", () => {

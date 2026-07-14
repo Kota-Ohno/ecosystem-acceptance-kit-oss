@@ -9,10 +9,10 @@ or announcement action is authorized by this document.
 
 | Repository | License | Secret audit | Local release gate | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| Agent Black Box OSS | MIT | Clean noreply history/tree | 25 tests; 9.6 KB packed CLI smoke | Explicit visibility approval |
+| Agent Black Box OSS | MIT | Clean noreply history/tree | 33 tests; atomic multi-batch and packed CLI smoke | Explicit visibility approval |
 | Sol Ledger Protocol OSS | MIT | Clean noreply history/tree | npm, TypeScript, Rust fmt/clippy/tests; crate metadata | Explicit visibility approval |
-| Evidence Forge OSS | MIT | Clean noreply history/tree | Complete private-readiness receipt | Explicit visibility approval |
-| Ecosystem Acceptance Kit OSS | MIT | Clean noreply history/tree; bounded hash rule; generated output excluded | 22 tests; packed demo/doctor; full clean-history acceptance | Explicit visibility approval |
+| Evidence Forge OSS | MIT | Clean noreply history/tree | 228 local checks; complete private-readiness receipt | Explicit visibility approval |
+| Ecosystem Acceptance Kit OSS | MIT | Clean noreply history/tree; bounded hash rule; generated output excluded | 29 tests; packed demo/doctor; full clean-history acceptance | Explicit visibility approval |
 
 The Gitleaks exceptions in the Kit are bounded to verified 64-hex
 `previousEntrySha256` fields, one retained historical fingerprint, and the
@@ -39,10 +39,10 @@ Sol Ledger contract have identical schema files:
 - provenance-edge: `e3be46e852e55425a970d78cb2e71f9fb5cfbfdd262f0ce5595ee20989fabc02`
 - security-policy: `2180eefea150b07a07ed420b88867027d874979f82a5b9a03802deb123cdd4bb`
 
-The clean-history full acceptance receipt head is
-`9daaff123d258229978b2eb39aceab1c1ffdcedc7c638682da2d0dd0d4f944f0` and the
-four-entry retained index head is
-`c720fc627d1cfcd696b8d4d0b3765b6e5fbcb5a4a7bd49004c4324165c278e43`.
+The latest review-remediated clean-history acceptance receipt head is
+`37cfbef269ceaacbb078427a77bf1578850125d81e18bf33a350cc176f099f44` and the
+seven-entry retained index head is
+`c35139819250680403f95cdf649ecf9d5132a4e526b06998999ed82a0ae26481`.
 
 ## Publication order
 

@@ -28,5 +28,8 @@
   private development repositories unchanged.
 - [x] M12 — Classify repository relocation, run the complete clean-history
   ecosystem acceptance, and append its externally supplied receipt head.
+- [x] M12a — Refresh the clean-history pins to the final review remediations,
+  classify the runtime/schema changes without execution, complete full local
+  acceptance, and append the independently headed receipt to the retained index.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

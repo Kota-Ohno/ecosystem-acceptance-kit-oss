@@ -12,6 +12,11 @@ the full acceptance entry retained in the index.
 clean-history `-oss` relocation. The corresponding v0.3.2→v0.4.0 preflight is
 retained separately because relocation requires explicit manual review.
 
+`v0.4.2.lock.json` preserves the last clean-history pins before final review
+remediation. The v0.4.2→v0.4.3 preflight records the resulting product and
+schema classification; its manual-review decision is backed by the subsequent
+full acceptance entry rather than treated as semantic proof by itself.
+
 `acceptance-index.json` is an append-only summary of locally verified acceptance
 receipts. Each entry binds its prior entry, exact revisions, receipt head, and
 artifact heads. Git history provides a separate retained copy of the index head,

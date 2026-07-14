@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.7.0 — 2026-07-14
+
+- Add a caller-source onboarding mode that accepts one local file and exact
+  quote, requires immediate-promotion preauthorization, and returns no source
+  path or quote in the final report.
+- Preserve the tutorial mode while sharing the same pinned, disposable,
+  separately reverified packet path.
+- Scope onboarding checkout to Evidence Forge only; keep three-product checkout
+  under `bootstrap`, and document the hardened 4.27-second median against an
+  equivalent 3.57-second scoped manual path.
+- Snapshot caller input before checkout, validate timestamps before side effects,
+  close-validate verification output and artifact relationships, and make the
+  one-repository scope explicit in text and JSON results.
+
 ## 0.6.1 — 2026-07-14
 
 - Pin the merged Evidence Forge one-command local-file workflow, including its

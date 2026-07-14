@@ -13,6 +13,17 @@ isolated `HOME` and temporary directory, and every dependency install disables l
 This reduces accidental credential inheritance but does not prevent repository code from reading
 host files or using the network. The kit is orchestration, not a sandbox.
 
+Caller-source onboarding opens the selected regular file without following a
+symlink and fixes its bytes in a private temporary snapshot before checkout or
+installation. It passes that snapshot path and the exact quote to the pinned
+Evidence Forge child as arguments. They are not copied into Kit progress, errors,
+or its final report, but the quote may remain visible to local shell history or
+same-host process inspection. The resulting private Evidence directory retains
+the source snapshot and citation by design. The Kit re-checks the output-parent
+identity immediately before execution and removes its temporary input snapshot.
+Immediate promotion is
+preauthorized; this mode does not represent human inspection of the Candidate.
+
 ## Fail-closed properties
 
 - Moving branches and tags are not accepted as revisions.
@@ -34,6 +45,9 @@ host files or using the network. The kit is orchestration, not a sandbox.
 - Workspace and output paths are redacted from streamed child output and errors.
 - Child commands have bounded runtimes and timeout cleanup targets their process
   groups before escalating to a forced kill.
+- Onboarding checks out only the pinned Evidence Forge revision it executes;
+  the default `bootstrap` and full acceptance paths continue to cover all three
+  product revisions.
 
 ## Non-claims
 

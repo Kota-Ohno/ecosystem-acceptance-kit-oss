@@ -59,7 +59,6 @@ pnpm --silent onboard \
   --source ./notes.txt \
   --exact-file ./private-exact.txt \
   --available-at 2026-07-11T00:00:00Z \
-  --directory ./my-evidence \
   --promote-immediately
 ```
 
@@ -72,6 +71,10 @@ Kit report omits the source path and quote, while the private Evidence output
 retains the source snapshot and citation needed for verification. Keep
 `--silent` so pnpm itself does not echo caller arguments. Use Evidence Forge's
 separate `capture` then `promote` commands when Candidate inspection is required.
+Caller-source mode chooses a new `evidence-YYYYMMDDTHHMMSSZ-xxxxxxxx` directory
+under the current directory when `--directory` is omitted; this timestamp is only
+an organizational filename and is not trusted Evidence time. Pass
+`--directory ./my-evidence` when a specific new path is desired.
 
 Unlike `demo` and `bootstrap`, onboarding intentionally executes the pinned
 Evidence Forge workflow and may access GitHub and the package registry. It
@@ -123,8 +126,7 @@ pnpm onboard
 
 # One-command packet from a caller-selected local source.
 pnpm --silent onboard --source ./notes.txt --exact-file ./private-exact.txt \
-  --available-at 2026-07-11T00:00:00Z --directory ./my-evidence \
-  --promote-immediately
+  --available-at 2026-07-11T00:00:00Z --promote-immediately
 
 # Diagnose all full-run prerequisites; use --offline to avoid GitHub access.
 pnpm doctor

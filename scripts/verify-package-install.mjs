@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import {
-  chmodSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync,
+  chmodSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, realpathSync, rmSync, writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -86,6 +86,7 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
     }
 
     let onlineVerified = false;
+    let repeatedAutomaticDirectoriesVerified = false;
     if (onlineOnboard) {
       const source = join(consumer, "source.txt");
       const exactFile = join(consumer, "exact.txt");
@@ -93,20 +94,26 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
       writeFileSync(source, `${exact}\n`, { mode: 0o600 });
       writeFileSync(exactFile, exact, { mode: 0o600 });
       const workspace = join(consumer, "workspace");
-      const directory = join(consumer, "evidence");
-      const result = run(executable, [
-        "onboard", "--workspace-root", workspace, "--source", source, "--exact-file", exactFile,
-        "--available-at", "2026-07-14T00:00:00Z", "--directory", directory,
-        "--promote-immediately", "--json",
-      ], { cwd: consumer, timeoutMs: 120_000 });
-      const report = parseJson(result.stdout, "Installed Kit onboard");
-      const serialized = JSON.stringify(report);
-      if (report.version !== 2 || report.outcome !== "first_evidence_ready" ||
-          report.evidence?.outcome !== "verified" || report.scope?.allRepositoriesChecked !== false ||
-          serialized.includes(exact) || serialized.includes(source) || serialized.includes(exactFile)) {
-        throw new Error("Installed Kit onboard contract failed");
+      const directories = [];
+      for (let position = 0; position < 2; position += 1) {
+        const result = run(executable, [
+          "onboard", "--workspace-root", workspace, "--source", source, "--exact-file", exactFile,
+          "--available-at", "2026-07-14T00:00:00Z", "--promote-immediately", "--json",
+        ], { cwd: consumer, timeoutMs: 120_000 });
+        const report = parseJson(result.stdout, "Installed Kit onboard");
+        const serialized = JSON.stringify(report);
+        if (report.version !== 2 || report.outcome !== "first_evidence_ready" ||
+            report.evidence?.outcome !== "verified" || report.scope?.allRepositoriesChecked !== false ||
+            realpathSync(dirname(report.directory)) !== realpathSync(consumer) ||
+            !/^evidence-\d{8}T\d{6}Z-[0-9a-f]{8}$/u.test(basename(report.directory)) ||
+            serialized.includes(exact) || serialized.includes(source) || serialized.includes(exactFile)) {
+          throw new Error("Installed Kit onboard contract failed");
+        }
+        directories.push(report.directory);
       }
       onlineVerified = true;
+      repeatedAutomaticDirectoriesVerified = new Set(directories).size === 2;
+      if (!repeatedAutomaticDirectoriesVerified) throw new Error("Installed Kit reused an automatic Evidence directory");
     }
 
     return {
@@ -122,7 +129,11 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
         installedOnboardingDoctorVerified: true,
         installedDemoVerified: true,
         diagnosticRedactionVerified: true,
-        onlineOnboardVerified: onlineVerified,
+      },
+      onlineOnboard: {
+        checked: onlineOnboard,
+        verified: onlineOnboard ? onlineVerified : null,
+        repeatedAutomaticDirectoriesVerified: onlineOnboard ? repeatedAutomaticDirectoriesVerified : null,
       },
       assurance: { networkUsed: onlineOnboard, paidServiceInvoked: false, temporaryBytesRetained: false },
     };

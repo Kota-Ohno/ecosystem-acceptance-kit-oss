@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.0 — 2026-07-14
+
+- Choose a bounded, collision-resistant Evidence output directory automatically
+  when caller-source onboarding omits `--directory`.
+- Preserve the tutorial's existing default and explicit caller-selected paths;
+  document that the generated filename timestamp is organizational, not attested.
+
 ## 0.8.0 — 2026-07-14
 
 - Add `doctor --onboard`, a focused readiness check for Node.js, Git, pnpm,

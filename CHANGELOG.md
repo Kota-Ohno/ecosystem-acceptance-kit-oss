@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1 — 2026-07-14
+
+- Pin the merged Evidence Forge one-command local-file workflow, including its
+  immediate-promotion preauthorization contract, identity-safe cleanup,
+  reproducible performance check, and installed-package coverage.
+
 ## 0.6.0 — 2026-07-14
 
 - Add an explicit one-command onboarding path from pinned checkout through the

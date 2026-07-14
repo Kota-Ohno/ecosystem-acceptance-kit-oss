@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "outcome": "analyzed",
+  "comparedAt": "2026-07-14T12:45:20.465Z",
+  "manifests": {
+    "olderSha256": "c3806e24f99cbd2723495b3973c1e62b0d2c04547f11715dd8624a07f3ebefa7",
+    "newerSha256": "de7bfc98799764565ceff23cf868a754ac7ac9c7cb6d5b74c3cc1e39167c8c4f"
+  },
+  "repositories": {
+    "agentBlackBox": {
+      "changed": false,
+      "relocated": false,
+      "olderRevision": "ceed31eff90458428a07f2872c868e6ce57b2f5f",
+      "newerRevision": "ceed31eff90458428a07f2872c868e6ce57b2f5f",
+      "changedPathCount": 0,
+      "categories": {
+        "product": 0,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [],
+      "pathsTruncated": false
+    },
+    "solLedger": {
+      "changed": false,
+      "relocated": false,
+      "olderRevision": "6924668c1ec771cce02f9129e43ab277c9b99bf4",
+      "newerRevision": "6924668c1ec771cce02f9129e43ab277c9b99bf4",
+      "changedPathCount": 0,
+      "categories": {
+        "product": 0,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [],
+      "pathsTruncated": false
+    },
+    "evidenceForge": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "a1f8b482b6176f0da8347cb6016cfe74d637a482",
+      "newerRevision": "fa4f0bbf8f9c9f8a98543457c877ce7582ac20da",
+      "changedPathCount": 15,
+      "categories": {
+        "product": 15,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 1
+      },
+      "paths": [
+        "CHANGELOG.md",
+        "README.md",
+        "docs/OPERATOR.md",
+        "docs/PERFORMANCE.md",
+        "docs/ROADMAP.md",
+        "package.json",
+        "scripts/benchmark-local-forge.mjs",
+        "scripts/benchmark-local-forge.test.mjs",
+        "scripts/dogfood-stack.test.mjs",
+        "scripts/verify-package-install.mjs",
+        "src/cli.ts",
+        "src/local-evidence-pipeline.ts",
+        "src/local-file-forge.test.ts",
+        "src/local-file-forge.ts",
+        "src/quickstart.ts"
+      ],
+      "pathsTruncated": false
+    }
+  },
+  "protocolContract": {
+    "changed": false,
+    "relocated": false,
+    "olderRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "newerRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "changedPathCount": 0,
+    "schemaChanged": false,
+    "schemaPaths": [],
+    "schemaPathsTruncated": false
+  },
+  "decision": {
+    "changeClass": "implementation",
+    "fullAcceptanceRequired": true,
+    "manualReviewRequired": false
+  },
+  "assurance": {
+    "repositoryCodeExecuted": false,
+    "exactCommitsCompared": true,
+    "semanticCompatibilityProven": false,
+    "networkUsed": true,
+    "timestampAttested": false
+  },
+  "integrity": {
+    "algorithm": "sha256-jcs",
+    "receiptSha256": "248585407fadf38a39754bed0b4348bf2d960bb94b56c8bceaff0d29b0255a77"
+  }
+}

@@ -49,5 +49,7 @@
   scripts, private new output, a fresh disposable execution checkout, packet
   replay, and complete post-run checkout revalidation in under 10 seconds median
   on the documented reference scenario.
+- [x] M12h — Pin the merged Evidence Forge local-file forge workflow and verify
+  the exact revision across the complete local ecosystem acceptance path.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

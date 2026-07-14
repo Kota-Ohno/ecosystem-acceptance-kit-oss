@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1 — 2026-07-14
+
+- Standardize all JavaScript workflows and lockfiles on pnpm 11.0.8.
+- Run pinned Agent Black Box and Sol Ledger checks through pnpm.
+- Retain npm only as an intentional packed-artifact consumer compatibility check.
+
 ## 0.4.0 — 2026-07-14
 
 - Move the default acceptance graph to four clean-history `-oss` public candidates.

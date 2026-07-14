@@ -66,5 +66,8 @@
 - [x] M12m — Let a complete observation file serve as its own exact citation
   through one private snapshot path, eliminating duplicate quote-file setup
   without exposing content in argv.
+- [x] M12n — Re-verify a retained Evidence packet later through one pinned,
+  progress-reporting command that requires a caller-supplied digest and performs
+  no Kit writes to the retained directory; independent storage remains operator practice.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

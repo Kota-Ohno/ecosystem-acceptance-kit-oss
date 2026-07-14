@@ -32,6 +32,15 @@ immutable against pinned repository code running as the same user; that code
 could alter a mode-0600 file between its own reads because onboarding is not a
 sandbox.
 
+Retained-Evidence verification requires the expected packet SHA-256 as a command
+argument rather than automatically trusting a digest stored beside the packet.
+The Kit cannot determine whether the caller stored that argument independently.
+It checks the private Evidence directory and packet identities, fixes the packet bytes in
+a private temporary snapshot, then invokes a fresh checkout of the pinned
+Evidence Forge verifier. Signal cleanup is registered before bootstrap, and the
+retained Evidence directory is read-only from the Kit's workflow. As elsewhere,
+same-user pinned code is inside the trust boundary and is not sandboxed.
+
 ## Fail-closed properties
 
 - Moving branches and tags are not accepted as revisions.

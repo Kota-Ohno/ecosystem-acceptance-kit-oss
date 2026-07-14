@@ -62,7 +62,8 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
       throw new Error("Installed Kit package identity does not match the source package");
     }
     const help = run(executable, ["--help"], { cwd: consumer }).stdout;
-    if (!help.includes("--cite-entire-source") || !help.includes("--exact-file FILE") || !help.includes("verify-receipt FILE")) {
+    if (!help.includes("--cite-entire-source") || !help.includes("--exact-file FILE") ||
+        !help.includes("verify-evidence --directory DIR") || !help.includes("verify-receipt FILE")) {
       throw new Error("Installed Kit help is incomplete");
     }
     const onboardingDoctor = parseJson(run(executable, [
@@ -87,12 +88,14 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
 
     let onlineVerified = false;
     let repeatedAutomaticDirectoriesVerified = false;
+    let retainedEvidenceReverified = false;
     if (onlineOnboard) {
       const source = join(consumer, "source.txt");
       const exact = "Installed package private onboarding observation.";
       writeFileSync(source, `${exact}\n`, { mode: 0o600 });
       const workspace = join(consumer, "workspace");
       const directories = [];
+      const reports = [];
       for (let position = 0; position < 2; position += 1) {
         const result = run(executable, [
           "onboard", "--workspace-root", workspace, "--source", source, "--cite-entire-source",
@@ -108,10 +111,19 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
           throw new Error("Installed Kit onboard contract failed");
         }
         directories.push(report.directory);
+        reports.push(report);
       }
       onlineVerified = true;
       repeatedAutomaticDirectoriesVerified = new Set(directories).size === 2;
       if (!repeatedAutomaticDirectoriesVerified) throw new Error("Installed Kit reused an automatic Evidence directory");
+      const retained = parseJson(run(executable, [
+        "verify-evidence", "--workspace-root", workspace, "--directory", reports[1].directory,
+        "--expected-sha256", reports[1].evidence.packetSha256, "--json",
+      ], { cwd: consumer, timeoutMs: 120_000 }).stdout, "Installed Kit retained Evidence verification");
+      retainedEvidenceReverified = retained.kind === "RetainedEvidenceVerification" && retained.outcome === "verified" &&
+        retained.packetSha256 === reports[1].evidence.packetSha256 && retained.assurance?.expectedDigestArgumentRequired === true &&
+        retained.assurance?.kitWritesToEvidenceDirectory === false;
+      if (!retainedEvidenceReverified) throw new Error("Installed Kit retained Evidence verification contract failed");
     }
 
     return {
@@ -132,6 +144,7 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
         checked: onlineOnboard,
         verified: onlineOnboard ? onlineVerified : null,
         repeatedAutomaticDirectoriesVerified: onlineOnboard ? repeatedAutomaticDirectoriesVerified : null,
+        retainedEvidenceReverified: onlineOnboard ? retainedEvidenceReverified : null,
       },
       assurance: { networkUsed: onlineOnboard, paidServiceInvoked: false, temporaryBytesRetained: false },
     };

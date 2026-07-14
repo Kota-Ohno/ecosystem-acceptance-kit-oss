@@ -55,12 +55,15 @@ For a caller-selected local text file, quote, and availability time:
 ```bash
 pnpm --silent onboard \
   --source ./notes.txt \
-  --exact "A uniquely identifying quote" \
+  --exact-file ./private-exact.txt \
   --available-at 2026-07-11T00:00:00Z \
   --directory ./my-evidence \
   --promote-immediately
 ```
 
+Create `private-exact.txt` as a mode-0600 UTF-8 file without placing its literal
+content in shell history; Evidence Forge reads it with a bounded, no-symlink
+contract. `--exact TEXT` remains available for compatibility.
 `--promote-immediately` preauthorizes promotion before the Candidate exists;
 this shortest path does not pause for human Candidate inspection. The final
 Kit report omits the source path and quote, while the private Evidence output
@@ -117,7 +120,7 @@ pnpm demo
 pnpm onboard
 
 # One-command packet from a caller-selected local source.
-pnpm --silent onboard --source ./notes.txt --exact "Unique quote" \
+pnpm --silent onboard --source ./notes.txt --exact-file ./private-exact.txt \
   --available-at 2026-07-11T00:00:00Z --directory ./my-evidence \
   --promote-immediately
 
@@ -163,10 +166,10 @@ the results into one local receipt.
 - Onboarding also executes pinned Evidence Forge code after installing packages
   with lifecycle scripts disabled; use `bootstrap` when checkout-only inspection
   is required.
-- Source paths and exact quotes passed as CLI arguments can be visible to the
-  local shell history and operating-system process inspection. The Kit does not
-  repeat them in progress, errors, or its final report; use this mode only under
-  an appropriate local account boundary.
+- `--exact-file` keeps quote bytes out of the process argument list; file paths
+  remain locally visible. Compatibility `--exact TEXT` can expose the quote to
+  shell history and same-host process inspection. The Kit does not repeat either
+  input in progress, errors, or its final report.
 - The kit does not publish artifacts or send telemetry, but full acceptance does
   access GitHub and package registries. The demo is the offline path.
 - Retain receipt heads through an independent channel and protect local output.

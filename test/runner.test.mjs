@@ -67,12 +67,14 @@ test("preserves explicit network configuration and resolves default Rust homes",
   const hostHome = join(root, "host-home");
   mkdirSync(join(hostHome, ".rustup"), { recursive: true });
   mkdirSync(join(hostHome, ".cargo"), { recursive: true });
+  mkdirSync(join(hostHome, ".cache", "node", "corepack"), { recursive: true });
   const environment = createExecutionEnvironment(join(root, "workspace"), {
     HOME: hostHome, PATH: "/tools", HTTPS_PROXY: "http://proxy.example:8080",
     NO_PROXY: "localhost", NODE_EXTRA_CA_CERTS: "/certs/company.pem", SECRET_TOKEN: "excluded",
   });
   assert.equal(environment.RUSTUP_HOME, join(hostHome, ".rustup"));
   assert.equal(environment.CARGO_HOME, join(hostHome, ".cargo"));
+  assert.equal(environment.COREPACK_HOME, join(hostHome, ".cache", "node", "corepack"));
   assert.equal(environment.HTTPS_PROXY, "http://proxy.example:8080");
   assert.equal(environment.NO_PROXY, "localhost");
   assert.equal(environment.NODE_EXTRA_CA_CERTS, "/certs/company.pem");

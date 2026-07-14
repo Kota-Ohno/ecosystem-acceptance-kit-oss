@@ -45,6 +45,11 @@ baseline before the three product roadmaps recorded clean-history acceptance.
 The v0.12.0→v0.12.1 preflight classifies those documentation-only heads; the
 subsequent full acceptance entry verifies their exact integrated revisions.
 
+`v0.12.1.lock.json` preserves the roadmap-synchronized heads before replacing
+temporary private-repository installation notices with durable source
+distribution guidance. The v0.12.1→v0.12.2 preflight and subsequent full
+acceptance verify those exact documentation-ready revisions.
+
 `acceptance-index.json` is an append-only summary of locally verified acceptance
 receipts. Each entry binds its prior entry, exact revisions, receipt head, and
 artifact heads. Git history provides a separate retained copy of the index head,

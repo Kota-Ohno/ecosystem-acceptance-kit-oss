@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "outcome": "analyzed",
+  "comparedAt": "2026-07-14T14:51:51.312Z",
+  "manifests": {
+    "olderSha256": "e9b8d59b622c904bb240e60b794eb54b0660b488f1528fc3830fae6f496ffb59",
+    "newerSha256": "2f82820858789b58e2048abb23fa99558f6deaa1441981e4817bd163f4079222"
+  },
+  "repositories": {
+    "agentBlackBox": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "76829f85e514159b34c752b0e6ebad392f326927",
+      "newerRevision": "c2c6c6909899b31adbdb5c6e1e533afbf6ee65c1",
+      "changedPathCount": 1,
+      "categories": {
+        "product": 1,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [
+        "README.md"
+      ],
+      "pathsTruncated": false
+    },
+    "solLedger": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "d72cf19ddcf1e6d9ca7844b4e2fd7feb10c98009",
+      "newerRevision": "29fe9e6ce91a5c9254a2121c2cf4dc914fdd3b2e",
+      "changedPathCount": 3,
+      "categories": {
+        "product": 0,
+        "protocol": 3,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [
+        "README.md",
+        "crates/sol-ledger-cli/Cargo.toml",
+        "crates/sol-ledger-schema/Cargo.toml"
+      ],
+      "pathsTruncated": false
+    },
+    "evidenceForge": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "b258371c3fdd01482ca95696f4e1f52d45b90e51",
+      "newerRevision": "fcdd3e0ea0a15d394571679cd38287484d0a4ef9",
+      "changedPathCount": 1,
+      "categories": {
+        "product": 1,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [
+        "README.md"
+      ],
+      "pathsTruncated": false
+    }
+  },
+  "protocolContract": {
+    "changed": false,
+    "relocated": false,
+    "olderRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "newerRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "changedPathCount": 0,
+    "schemaChanged": false,
+    "schemaPaths": [],
+    "schemaPathsTruncated": false
+  },
+  "decision": {
+    "changeClass": "implementation",
+    "fullAcceptanceRequired": true,
+    "manualReviewRequired": false
+  },
+  "assurance": {
+    "repositoryCodeExecuted": false,
+    "exactCommitsCompared": true,
+    "semanticCompatibilityProven": false,
+    "networkUsed": true,
+    "timestampAttested": false
+  },
+  "integrity": {
+    "algorithm": "sha256-jcs",
+    "receiptSha256": "a449e6aaa375eeda0511d7a6285eb104fb3559a55e7bf7f41e729939295c57e6"
+  }
+}

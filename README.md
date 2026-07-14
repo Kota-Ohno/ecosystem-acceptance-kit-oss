@@ -1,7 +1,7 @@
 # Ecosystem Acceptance Kit
 
 Ecosystem Acceptance Kit is for maintainers and reviewers who want one local
-answer to “do these exact private revisions still work together?” It offers a
+answer to “do these exact pinned revisions still work together?” It offers a
 seconds-fast offline demo, prerequisite diagnosis, and a revision-pinned full
 acceptance run that produces a tamper-evident receipt.
 
@@ -12,9 +12,11 @@ It coordinates the Evidence Forge ecosystem:
 - Evidence Forge exercises capture-to-promotion behavior from its packed artifact,
   produces a two-signer review bundle, and verifies a signed release evidence pack.
 
-> **Installation status:** this repository is currently private and the package
-> has `private: true`; it is not published to npm. Clone it from an account with
-> access. pnpm is the supported package manager.
+> **Distribution status:** install from this source repository with pnpm. The
+> package remains `private: true` and is not published to npm, which prevents an
+> accidental registry release while keeping source installation supported.
+> Before repository visibility is public, cloning requires authorized GitHub
+> access; after visibility changes, the same source-install steps work anonymously.
 
 ## Shortest path
 
@@ -168,7 +170,7 @@ pnpm doctor --onboard
 # Verify the actual tarball offline; this is also part of pnpm check.
 pnpm smoke:package
 
-# Release-candidate smoke through the installed tarball and pinned private repo.
+# Release-candidate smoke through the installed tarball and pinned source repo.
 # Its JSON includes non-gating first/repeat/verification timing samples.
 pnpm smoke:package:onboard
 
@@ -185,10 +187,10 @@ The current repeatable scenario and three-sample baseline are recorded in
 
 Add `--json` to `demo` or `doctor` when another tool consumes the result.
 
-If bootstrap fails during checkout, run networked `pnpm doctor` first. Confirm
-GitHub credentials and private repository access, then rerun the same bootstrap
-command. Failed temporary checkouts are removed; existing conflicting or dirty
-directories are left unchanged.
+If bootstrap fails during checkout, run networked `pnpm doctor` first. When a
+pinned repository is access-restricted, confirm GitHub credentials, then rerun
+the same bootstrap command. Failed temporary checkouts are removed; existing
+conflicting or dirty directories are left unchanged.
 
 If onboarding fails, its inspection checkout and any completed Evidence output
 remain visible rather than being silently replaced; its disposable execution
@@ -232,8 +234,8 @@ Forge's exact schema and Rust/JCS compatibility gate.
 - Node.js 24.4 or newer
 - Git, pnpm, and a Rust toolchain with Cargo. npm is also checked because the
   packed-artifact compatibility suite deliberately verifies npm consumers.
-- Read access to the three clean-history GitHub repositories while the public
-  candidates remain private
+- Read access to the three clean-history GitHub repositories; credentials are
+  required only while their visibility is restricted
 
 The pinned repositories contain executable package and build code. Review a lock
 change before running it; a successful receipt is interoperability evidence, not

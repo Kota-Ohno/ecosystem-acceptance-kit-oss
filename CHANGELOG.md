@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.12.2 — 2026-07-14
+
+- Replace temporary private-repository installation notices with durable source
+  distribution guidance across all four repositories while keeping registry
+  publication disabled.
+- Refresh the cross-repository release-readiness evidence and accept the exact
+  documentation-ready private main revisions.
+
 ## 0.12.1 — 2026-07-14
 
 - Pin the three private main revisions that record completed clean-history

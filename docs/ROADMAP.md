@@ -80,5 +80,8 @@
 - [x] M12r — Pin the three roadmap-synchronized private-main revisions,
   classify the documentation-only transition, complete full local acceptance,
   and append its receipt to the retained index.
+- [x] M12s — Remove visibility-dependent installation copy, refresh the
+  cross-repository release-readiness audit, pin the documentation-ready heads,
+  and append their complete local acceptance receipt.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

@@ -9,10 +9,10 @@ or announcement action is authorized by this document.
 
 | Repository | License | Secret audit | Local release gate | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| Agent Black Box OSS | MIT | Clean noreply history/tree | 42 tests; strict JSON/storage boundaries and packed CLI smoke | Explicit visibility approval |
-| Sol Ledger Protocol OSS | MIT | Clean noreply history/tree | npm, TypeScript, Rust fmt/clippy/tests; crate metadata | Explicit visibility approval |
-| Evidence Forge OSS | MIT | Clean noreply history/tree | 228 local checks; complete private-readiness receipt | Explicit visibility approval |
-| Ecosystem Acceptance Kit OSS | MIT | Clean noreply history/tree; bounded hash rule; generated output excluded | 31 tests; bounded process cleanup; full clean-history acceptance | Explicit visibility approval |
+| Agent Black Box OSS | MIT | Gitleaks history/tree clean; noreply-only authors | 42 tests; strict JSON/storage boundaries and packed CLI smoke | Explicit visibility approval |
+| Sol Ledger Protocol OSS | MIT | Gitleaks history/tree clean; noreply-only authors | TypeScript generation/type/interop plus Rust fmt/clippy/tests | Explicit visibility approval |
+| Evidence Forge OSS | MIT | Gitleaks history/tree clean; noreply-only authors | 45 Vitest files / 207 tests, 34 script tests, packed acceptance | Explicit visibility approval |
+| Ecosystem Acceptance Kit OSS | MIT | Gitleaks history/tree clean; noreply-only authors | 65 tests, installed-tarball smoke, 34-step ecosystem acceptance | Explicit visibility approval |
 
 The Gitleaks exceptions in the Kit are bounded to verified 64-hex
 `previousEntrySha256` fields, one retained historical fingerprint, and the
@@ -40,16 +40,36 @@ Sol Ledger contract have identical schema files:
 - security-policy: `2180eefea150b07a07ed420b88867027d874979f82a5b9a03802deb123cdd4bb`
 
 The latest locally verified clean-history acceptance receipt head is
-`6e4e9b2e253dda7ea174f4ad2e1c5b36711ddeb6a39997ff7268163837eae8de` and the
-twelve-entry retained index head is
-`d6be61d115c5150fb260f4eaeda6e4d944642d47164ff3b9f1b19b5e2132af1a`.
+`43748b5a481a478aed1cc21693a6d4e5d4843e61303bcf864e63aed955265dba` and the
+fourteen-entry retained index head is
+`24378c4a8ee50aeece5688cdd764d7d3b2abb79b72119e564ee8fa71b433db67`.
+
+## Current cross-repository audit
+
+- Gitleaks 8.30.1 scanned every repository's full Git history and a clean
+  archive of every tracked working-tree file with complete redaction; all eight
+  scans returned zero findings.
+- Every commit author email in the four clean repositories uses the GitHub
+  noreply address. No tracked `.env`, `HANDOFF`, database, private key, archive,
+  or session-memory artifact was found.
+- `pnpm audit --prod` reports zero known production vulnerabilities in all four
+  repositories. Production dependencies are MIT, BSD-2-Clause, or BSD-3-Clause;
+  the other two Node packages have no production dependency.
+- The products have no deployment manifest, hosted endpoint, telemetry
+  transport, paid API integration, or cloud resource. The Review Workspace is
+  loopback-only, and Evidence Forge remote capture is an explicit bounded fetch,
+  so publishing source creates no running-cost or unauthenticated quota surface.
+- All repositories contain MIT licenses. `Kota Ohno` is the intentionally public
+  copyright-holder name used consistently across the four clean repositories.
+- Registry publication remains independently disabled: Node manifests are
+  `private: true`, and all three Sol Ledger Rust crates set `publish = false`.
 
 ## Publication order
 
 1. Sol Ledger Protocol, because both products pin its contract.
-2. Agent Black Box and Evidence Forge, after updating their public compatibility
-   references to the chosen protocol repository.
-3. Ecosystem Acceptance Kit, after replacing private URLs and exact revisions,
+2. Agent Black Box and Evidence Forge, after verifying their compatibility
+   references resolve against the visible protocol repository.
+3. Ecosystem Acceptance Kit, after pinning the visible repository heads,
    running preflight, then completing a new full acceptance run.
 4. Optional npm or crate publication only after separate package-name,
    provenance, and registry confirmation.

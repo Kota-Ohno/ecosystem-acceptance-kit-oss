@@ -4,10 +4,21 @@ import { tmpdir } from "node:os";
 import { delimiter, isAbsolute, join } from "node:path";
 import test from "node:test";
 import manifest from "../acceptance.lock.json" with { type: "json" };
-import { formatOnboard, onboardFirstEvidence } from "../lib/onboard.mjs";
+import { createAutomaticEvidenceDirectory, formatOnboard, onboardFirstEvidence } from "../lib/onboard.mjs";
 
 const roots = [];
 test.afterEach(() => roots.splice(0).forEach((root) => rmSync(root, { recursive: true, force: true })));
+
+test("creates a bounded collision-resistant default leaf without claiming evidence time", () => {
+  const directory = createAutomaticEvidenceDirectory(
+    "/private/runs", new Date("2026-07-14T13:45:01.234Z"), "12345678-1234-4abc-8def-1234567890ab",
+  );
+  assert.equal(directory, "/private/runs/evidence-20260714T134501Z-12345678");
+  assert.throws(() => createAutomaticEvidenceDirectory("/tmp", new Date("invalid"), "bad"), /valid time and UUID/u);
+  assert.throws(() => createAutomaticEvidenceDirectory(
+    "/tmp", new Date("2026-07-14T00:00:00Z"), "------------------------------------",
+  ), /valid time and UUID/u);
+});
 
 test("creates first verified Evidence through one explicit progress-reporting command", async () => {
   const root = temporaryRoot();

@@ -7,7 +7,7 @@ import { bootstrapWorkspace, formatBootstrap, textBootstrapReporter } from "../l
 import { diagnoseEnvironment, formatDoctor } from "../lib/doctor.mjs";
 import { appendIndex, verifyIndexFile } from "../lib/index.mjs";
 import { loadManifest } from "../lib/manifest.mjs";
-import { formatOnboard, onboardFirstEvidence } from "../lib/onboard.mjs";
+import { createAutomaticEvidenceDirectory, formatOnboard, onboardFirstEvidence } from "../lib/onboard.mjs";
 import { compareManifests } from "../lib/preflight.mjs";
 import { loadAndVerifyReceipt } from "../lib/receipt.mjs";
 import { createPlan, runAcceptance } from "../lib/runner.mjs";
@@ -197,6 +197,9 @@ function parseOnboard(arguments_) {
       ["--promote-immediately", options.promoteImmediately],
     ].filter(([, value]) => value === undefined || value === false).map(([name]) => name);
     throw new Error(`Local-file onboarding is missing required options: ${missing.join(", ")}`);
+  }
+  if (localRequested && !seen.has("--directory")) {
+    options.directory = createAutomaticEvidenceDirectory(process.cwd());
   }
   return options;
 }

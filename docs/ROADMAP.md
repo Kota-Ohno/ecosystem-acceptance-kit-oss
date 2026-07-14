@@ -60,5 +60,8 @@
 - [x] M12k — Add a focused onboarding doctor that checks only the tools, platform,
   and single private repository required for first Evidence, without reporting
   unrelated Cargo/npm/full-ecosystem failures.
+- [x] M12l — Make repeated caller-source onboarding collision-free by selecting a
+  bounded unique output directory when none is supplied, while preserving the
+  tutorial default and explicit-path behavior.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

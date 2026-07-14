@@ -1,5 +1,6 @@
 .acceptance-output/
 .acceptance-workspace/
+evidence-ecosystem-workspace/
 node_modules/
 *.log
 .env

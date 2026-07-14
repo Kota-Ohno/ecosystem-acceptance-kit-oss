@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 — 2026-07-14
+
+- Add a progressive one-command bootstrap that runs the offline demo and environment doctor,
+  then prepares exact clean three-product checkouts without executing repository code by default.
+- Refuse symlinks, conflicting revisions, origins, and dirty existing checkouts without replacing them.
+- Keep dependency installation and product execution outside bootstrap; full acceptance always uses fresh disposable checkouts.
+- Pin the merged onboarding revisions and retain their preflight plus full local acceptance evidence.
+
 ## 0.4.5 — 2026-07-14
 
 - Pin the private-main merge revisions for all three accepted ecosystem repositories.

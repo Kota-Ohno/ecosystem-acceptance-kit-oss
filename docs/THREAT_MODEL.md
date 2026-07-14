@@ -23,6 +23,14 @@ the source snapshot and citation by design. The Kit re-checks the output-parent
 identity immediately before execution and removes its temporary input snapshot.
 Immediate promotion is
 preauthorized; this mode does not represent human inspection of the Candidate.
+With `--cite-entire-source`, the same private snapshot path is supplied as both
+source and exact-file input, so no source bytes are copied into process arguments
+and there is no separately prepared quote file. The Kit validates the pinned
+exact-file byte contract before bootstrap and registers snapshot cleanup before
+bootstrap can start a child process. It does not claim that the snapshot is
+immutable against pinned repository code running as the same user; that code
+could alter a mode-0600 file between its own reads because onboarding is not a
+sandbox.
 
 ## Fail-closed properties
 

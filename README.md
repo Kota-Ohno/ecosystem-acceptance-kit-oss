@@ -52,19 +52,24 @@ disposable execution byte. The result is written to
 `./my-first-evidence`; the inspection-only Evidence Forge checkout remains in
 `./evidence-ecosystem-workspace`.
 
-For a caller-selected local text file, quote, and availability time:
+When the entire local text file is the observation, the shortest private path is:
 
 ```bash
 pnpm --silent onboard \
   --source ./notes.txt \
-  --exact-file ./private-exact.txt \
+  --cite-entire-source \
   --available-at 2026-07-11T00:00:00Z \
   --promote-immediately
 ```
 
-Create `private-exact.txt` as a mode-0600 UTF-8 file without placing its literal
-content in shell history; Evidence Forge reads it with a bounded, no-symlink
-contract. `--exact TEXT` remains available for compatibility.
+The whole-file citation must be non-empty UTF-8, at most 64 KiB, and contain
+neither a UTF-8 BOM nor NUL. The Kit checks this before checkout or dependency
+installation, so invalid input fails quickly without network or bootstrap work.
+
+To cite only one excerpt, replace `--cite-entire-source` with
+`--exact-file ./private-exact.txt`. Create that file as mode-0600 UTF-8 without
+placing its literal content in shell history; Evidence Forge reads it with a
+bounded, no-symlink contract. `--exact TEXT` remains available for compatibility.
 `--promote-immediately` preauthorizes promotion before the Candidate exists;
 this shortest path does not pause for human Candidate inspection. The final
 Kit report omits the source path and quote, while the private Evidence output
@@ -125,7 +130,7 @@ pnpm demo
 pnpm onboard
 
 # One-command packet from a caller-selected local source.
-pnpm --silent onboard --source ./notes.txt --exact-file ./private-exact.txt \
+pnpm --silent onboard --source ./notes.txt --cite-entire-source \
   --available-at 2026-07-11T00:00:00Z --promote-immediately
 
 # Diagnose all full-run prerequisites; use --offline to avoid GitHub access.

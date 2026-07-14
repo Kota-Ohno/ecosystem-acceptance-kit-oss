@@ -63,5 +63,8 @@
 - [x] M12l — Make repeated caller-source onboarding collision-free by selecting a
   bounded unique output directory when none is supplied, while preserving the
   tutorial default and explicit-path behavior.
+- [x] M12m — Let a complete observation file serve as its own exact citation
+  through one private snapshot path, eliminating duplicate quote-file setup
+  without exposing content in argv.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

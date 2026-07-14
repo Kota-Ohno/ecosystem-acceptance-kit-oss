@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { spawn } from "node:child_process";
 import { tmpdir } from "node:os";
 import { delimiter, isAbsolute, join } from "node:path";
 import test from "node:test";
 import manifest from "../acceptance.lock.json" with { type: "json" };
-import { createAutomaticEvidenceDirectory, formatOnboard, onboardFirstEvidence } from "../lib/onboard.mjs";
+import { createAutomaticEvidenceDirectory, formatOnboard, onboardFirstEvidence, snapshotInput } from "../lib/onboard.mjs";
 
 const roots = [];
 test.afterEach(() => roots.splice(0).forEach((root) => rmSync(root, { recursive: true, force: true })));
@@ -118,6 +119,124 @@ test("creates verified Evidence from a caller-selected local file without retain
   assert.match(formatOnboard(report), /Immediate promotion was preauthorized/u);
 });
 
+test("cites an entire source through its private snapshot without a second input or quote argv", async () => {
+  const root = temporaryRoot();
+  const workspace = join(root, "workspace");
+  const directory = join(root, "whole-source-evidence");
+  const source = join(root, "whole-observation.txt");
+  writeFileSync(source, "The complete file is one private observation.\n", { mode: 0o600 });
+  const calls = [];
+  const report = await onboardFirstEvidence({
+    manifest, workspaceRoot: workspace, directory, source, citeEntireSource: true,
+    availableAt: "2026-07-14T00:00:00Z", promoteImmediately: true,
+    bootstrap: fakeBootstrap, command: fakeCommand(calls, directory, { workflow: "local_file" }),
+    resolveTool: (name) => `/trusted/bin/${name}`, createExecutionCheckout: fakeExecutionCheckout,
+    verifyCheckout: async () => {},
+  });
+  assert.deepEqual(calls[1].arguments_.slice(0, 6), [
+    "--silent", "forge", "--source", calls[1].arguments_[3], "--exact-file", calls[1].arguments_[3],
+  ]);
+  assert.notEqual(calls[1].arguments_[3], source);
+  assert.doesNotMatch(JSON.stringify(report), /complete file is one private observation/iu);
+});
+
+test("validates whole-source citation bytes before bootstrap side effects", async () => {
+  const root = temporaryRoot();
+  let bootstrapCalls = 0;
+  const invalidInputs = [
+    Buffer.alloc(0),
+    Buffer.alloc(64 * 1024 + 1, 0x61),
+    Buffer.from([0xef, 0xbb, 0xbf, 0x61]),
+    Buffer.from([0x61, 0, 0x62]),
+    Buffer.from([0xc3, 0x28]),
+  ];
+  for (const [index, bytes] of invalidInputs.entries()) {
+    const source = join(root, `invalid-${index}.txt`);
+    writeFileSync(source, bytes, { mode: 0o600 });
+    await assert.rejects(
+      onboardFirstEvidence({
+        manifest, workspaceRoot: join(root, "workspace"), directory: join(root, `result-${index}`),
+        source, citeEntireSource: true, availableAt: "2026-07-14T00:00:00Z", promoteImmediately: true,
+        bootstrap: async () => { bootstrapCalls += 1; return {}; }, resolveTool: (name) => `/trusted/bin/${name}`,
+      }),
+      /1–65536 bytes of UTF-8 without a BOM or NUL/u,
+    );
+  }
+  assert.equal(bootstrapCalls, 0);
+});
+
+test("accepts a whole-source citation at the exact 64 KiB boundary", () => {
+  const root = temporaryRoot();
+  const source = join(root, "maximum-citation.txt");
+  const executionRoot = join(root, "snapshot");
+  mkdirSync(executionRoot);
+  writeFileSync(source, Buffer.alloc(64 * 1024, 0x61), { mode: 0o600 });
+  const snapshot = snapshotInput(source, executionRoot, "input.txt", 64 * 1024, false, undefined, true);
+  assert.equal(readFileSync(snapshot).length, 64 * 1024);
+});
+
+test("binds a checked source identity to the descriptor used for its snapshot", () => {
+  const root = temporaryRoot();
+  const source = join(root, "source.txt");
+  const moved = join(root, "source-original.txt");
+  const executionRoot = join(root, "snapshot");
+  mkdirSync(executionRoot);
+  writeFileSync(source, "checked inode\n", { mode: 0o600 });
+  const checked = lstatSync(source);
+  renameSync(source, moved);
+  writeFileSync(source, "replacement inode\n", { mode: 0o600 });
+  assert.throws(
+    () => snapshotInput(source, executionRoot, "input.txt", 1024, false, { dev: checked.dev, ino: checked.ino }),
+    /could not be fixed safely/u,
+  );
+});
+
+test("SIGTERM during bootstrap removes the private source snapshot", { timeout: 4_000 }, async (context) => {
+  if (process.platform === "win32") { context.skip("POSIX signals are required"); return; }
+  const root = temporaryRoot();
+  const source = join(root, "signal-private-source.txt");
+  const marker = join(root, "snapshot-root.txt");
+  writeFileSync(source, "signal cleanup private observation\n", { mode: 0o600 });
+  const helperCode = `
+    (async () => {
+      const fs = require("node:fs");
+      const os = require("node:os");
+      const path = require("node:path");
+      const { onboardFirstEvidence } = await import(${JSON.stringify(new URL("../lib/onboard.mjs", import.meta.url).href)});
+      const manifest = JSON.parse(fs.readFileSync(${JSON.stringify(new URL("../acceptance.lock.json", import.meta.url).pathname)}, "utf8"));
+      await onboardFirstEvidence({
+        manifest,
+        workspaceRoot: ${JSON.stringify(join(root, "workspace"))},
+        directory: ${JSON.stringify(join(root, "result"))},
+        source: ${JSON.stringify(source)},
+        citeEntireSource: true,
+        availableAt: "2026-07-14T00:00:00Z",
+        promoteImmediately: true,
+        resolveTool: () => process.execPath,
+        bootstrap: async () => {
+          const entries = fs.readdirSync(os.tmpdir()).filter((leaf) => leaf.startsWith("ecosystem-onboard-source-"));
+          const snapshotRoot = entries
+            .map((leaf) => path.join(os.tmpdir(), leaf))
+            .filter((candidate) => fs.existsSync(path.join(candidate, "caller-source.bin")))
+            .sort((left, right) => fs.statSync(right).mtimeMs - fs.statSync(left).mtimeMs)[0];
+          fs.writeFileSync(${JSON.stringify(marker)}, JSON.stringify({ snapshotRoot, tmp: os.tmpdir(), entries }));
+          await new Promise(() => setInterval(() => {}, 1_000));
+        },
+      });
+    })().catch(() => process.exit(1));
+  `;
+  const helper = spawn(process.execPath, ["-e", helperCode], { stdio: "ignore" });
+  context.after(() => helper.kill("SIGKILL"));
+  await waitUntil(() => existsSync(marker));
+  const markerContents = JSON.parse(readFileSync(marker, "utf8"));
+  const snapshotRoot = markerContents.snapshotRoot;
+  assert.equal(existsSync(snapshotRoot), true, JSON.stringify(markerContents));
+  helper.kill("SIGTERM");
+  const exit = await new Promise((resolve) => helper.once("close", (code, signal) => resolve({ code, signal })));
+  assert.deepEqual(exit, { code: 143, signal: null });
+  assert.equal(existsSync(snapshotRoot), false);
+});
+
 test("rejects overlapping or existing output before bootstrap side effects", async () => {
   const root = temporaryRoot();
   let bootstrapped = false;
@@ -145,7 +264,14 @@ test("rejects incomplete, missing, symlinked, or overlapping local sources befor
   const bootstrap = async () => { bootstrapped = true; return {}; };
   await assert.rejects(
     onboardFirstEvidence({ manifest, workspaceRoot: workspace, directory, source: join(root, "source.txt"), bootstrap }),
-    /requires --source, exactly one of --exact or --exact-file/u,
+    /requires --source, exactly one citation selector/u,
+  );
+  await assert.rejects(
+    onboardFirstEvidence({
+      manifest, workspaceRoot: workspace, directory, source: join(root, "source.txt"), exact: "quote",
+      citeEntireSource: true, availableAt: "2026-07-14T00:00:00Z", promoteImmediately: true, bootstrap,
+    }),
+    /exactly one citation selector/u,
   );
   const invalidTimestampSource = join(root, "timestamp-source.txt");
   writeFileSync(invalidTimestampSource, "quote\n", { mode: 0o600 });
@@ -299,6 +425,14 @@ function temporaryRoot() {
   const root = mkdtempSync(join(tmpdir(), "ecosystem-onboard-test-"));
   roots.push(root);
   return root;
+}
+
+async function waitUntil(predicate) {
+  const deadline = Date.now() + 2_000;
+  while (!predicate()) {
+    if (Date.now() >= deadline) throw new Error("Timed out waiting for helper process");
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
 }
 
 async function fakeBootstrap({ manifest: input, workspaceRoot, reporter, repositorySelection }) {

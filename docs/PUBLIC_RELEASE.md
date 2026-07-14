@@ -39,10 +39,10 @@ Sol Ledger contract have identical schema files:
 - provenance-edge: `e3be46e852e55425a970d78cb2e71f9fb5cfbfdd262f0ce5595ee20989fabc02`
 - security-policy: `2180eefea150b07a07ed420b88867027d874979f82a5b9a03802deb123cdd4bb`
 
-The latest review-remediated clean-history acceptance receipt head is
-`038216f0c6a9fc1f5bcc14b9d14d13a763d08835dac32f91d47e5b6f729272f5` and the
-nine-entry retained index head is
-`89c93de118ea96a5856df2fd75cfb3b45bfb871ae080213b23fb333770fbdba3`.
+The latest locally verified clean-history acceptance receipt head is
+`6e4e9b2e253dda7ea174f4ad2e1c5b36711ddeb6a39997ff7268163837eae8de` and the
+twelve-entry retained index head is
+`d6be61d115c5150fb260f4eaeda6e4d944642d47164ff3b9f1b19b5e2132af1a`.
 
 ## Publication order
 

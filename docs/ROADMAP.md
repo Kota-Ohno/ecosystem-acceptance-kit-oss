@@ -54,5 +54,8 @@
 - [x] M12i — Add one-command caller-source onboarding, keep tutorial
   compatibility, omit source inputs from the final report, and remove two
   unused product checkouts so the documented median stays below five seconds.
+- [x] M12j — Verify the actual packed Kit through an offline, lifecycle-script-free
+  clean install on every `pnpm check`, with an explicit online installed-onboard
+  mode for release-candidate verification.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

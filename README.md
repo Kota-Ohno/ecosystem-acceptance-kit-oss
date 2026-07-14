@@ -128,6 +128,12 @@ pnpm --silent onboard --source ./notes.txt --exact-file ./private-exact.txt \
 pnpm doctor
 node bin/ecosystem-accept.mjs doctor --offline
 
+# Verify the actual tarball offline; this is also part of pnpm check.
+pnpm smoke:package
+
+# Release-candidate smoke through the installed tarball and pinned private repo.
+pnpm smoke:package:onboard
+
 # Inspect pinned work without executing repository code, then run acceptance.
 pnpm plan
 pnpm accept

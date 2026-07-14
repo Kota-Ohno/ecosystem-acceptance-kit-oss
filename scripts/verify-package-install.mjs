@@ -91,6 +91,8 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
     let onlineVerified = false;
     let repeatedAutomaticDirectoriesVerified = false;
     let retainedEvidenceReverified = false;
+    let copyReadyCommandVerified = false;
+    let retainedJsonContractVerified = false;
     const onboardDurationsMs = [];
     let retainedVerificationDurationMs = null;
     if (onlineOnboard) {
@@ -99,37 +101,58 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
       writeFileSync(source, `${exact}\n`, { mode: 0o600 });
       const workspace = join(consumer, "workspace");
       const directories = [];
-      const reports = [];
+      let jsonReport;
       for (let position = 0; position < 2; position += 1) {
-        const result = run(executable, [
+        const arguments_ = [
           "onboard", "--workspace-root", workspace, "--source", source, "--cite-entire-source",
-          "--available-at", "2026-07-14T00:00:00Z", "--promote-immediately", "--json",
-        ], { cwd: consumer, timeoutMs: 120_000 });
+          "--available-at", "2026-07-14T00:00:00Z", "--promote-immediately",
+        ];
+        if (position === 0) arguments_.push("--json");
+        const result = run(executable, arguments_, { cwd: consumer, timeoutMs: 120_000 });
         onboardDurationsMs.push(result.durationMs);
-        const report = parseJson(result.stdout, "Installed Kit onboard");
-        const serialized = JSON.stringify(report);
-        if (report.version !== 2 || report.outcome !== "first_evidence_ready" ||
-            report.evidence?.outcome !== "verified" || report.scope?.allRepositoriesChecked !== false ||
-            realpathSync(dirname(report.directory)) !== realpathSync(consumer) ||
-            !/^evidence-\d{8}T\d{6}Z-[0-9a-f]{8}$/u.test(basename(report.directory)) ||
-            serialized.includes(exact) || serialized.includes(source)) {
-          throw new Error("Installed Kit onboard contract failed");
+        if (position === 0) {
+          const report = parseJson(result.stdout, "Installed Kit onboard");
+          const serialized = JSON.stringify(report);
+          if (report.version !== 2 || report.outcome !== "first_evidence_ready" ||
+              report.evidence?.outcome !== "verified" || report.scope?.allRepositoriesChecked !== false ||
+              realpathSync(dirname(report.directory)) !== realpathSync(consumer) ||
+              !/^evidence-\d{8}T\d{6}Z-[0-9a-f]{8}$/u.test(basename(report.directory)) ||
+              serialized.includes(exact) || serialized.includes(source)) {
+            throw new Error("Installed Kit onboard contract failed");
+          }
+          directories.push(report.directory);
+          jsonReport = report;
+          continue;
         }
-        directories.push(report.directory);
-        reports.push(report);
+        const directoryMatch = result.stdout.match(/^  Evidence directory: (.+)$/mu);
+        const packetSha256Match = result.stdout.match(/^  Packet SHA-256: ([0-9a-f]{64})$/mu);
+        const commandMatch = result.stdout.match(/^    (pnpm --dir .+)$/mu);
+        if (!result.stdout.includes("Verified Evidence: READY") || !directoryMatch || !packetSha256Match || !commandMatch ||
+            result.stdout.includes(exact) || result.stdout.includes(source)) {
+          throw new Error("Installed Kit text onboarding contract failed");
+        }
+        directories.push(directoryMatch[1]);
+        const retainedResult = run("/bin/sh", ["-c", commandMatch[1]], {
+          cwd: consumer, timeoutMs: 120_000,
+        });
+        retainedVerificationDurationMs = retainedResult.durationMs;
+        retainedEvidenceReverified = retainedResult.stdout.includes("Retained Evidence: VERIFIED") &&
+          retainedResult.stdout.includes(`Packet SHA-256: ${packetSha256Match[1]}`);
+        copyReadyCommandVerified = retainedEvidenceReverified;
       }
       onlineVerified = true;
       repeatedAutomaticDirectoriesVerified = new Set(directories).size === 2;
       if (!repeatedAutomaticDirectoriesVerified) throw new Error("Installed Kit reused an automatic Evidence directory");
-      const retainedResult = run(executable, [
-        "verify-evidence", "--workspace-root", workspace, "--directory", reports[1].directory,
-        "--expected-sha256", reports[1].evidence.packetSha256, "--json",
+      const retainedJsonResult = run(executable, [
+        "verify-evidence", "--workspace-root", workspace, "--directory", jsonReport.directory,
+        "--expected-sha256", jsonReport.evidence.packetSha256, "--json",
       ], { cwd: consumer, timeoutMs: 120_000 });
-      retainedVerificationDurationMs = retainedResult.durationMs;
-      const retained = parseJson(retainedResult.stdout, "Installed Kit retained Evidence verification");
-      retainedEvidenceReverified = retained.kind === "RetainedEvidenceVerification" && retained.outcome === "verified" &&
-        retained.packetSha256 === reports[1].evidence.packetSha256 && retained.assurance?.expectedDigestArgumentRequired === true &&
+      const retained = parseJson(retainedJsonResult.stdout, "Installed Kit retained Evidence verification");
+      retainedJsonContractVerified = retained.kind === "RetainedEvidenceVerification" && retained.outcome === "verified" &&
+        retained.packetSha256 === jsonReport.evidence.packetSha256 &&
+        retained.assurance?.expectedDigestArgumentRequired === true &&
         retained.assurance?.kitWritesToEvidenceDirectory === false;
+      retainedEvidenceReverified = copyReadyCommandVerified && retainedJsonContractVerified;
       if (!retainedEvidenceReverified) throw new Error("Installed Kit retained Evidence verification contract failed");
     }
 
@@ -152,12 +175,15 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
         verified: onlineOnboard ? onlineVerified : null,
         repeatedAutomaticDirectoriesVerified: onlineOnboard ? repeatedAutomaticDirectoriesVerified : null,
         retainedEvidenceReverified: onlineOnboard ? retainedEvidenceReverified : null,
+        copyReadyCommandVerified: onlineOnboard ? copyReadyCommandVerified : null,
+        retainedJsonContractVerified: onlineOnboard ? retainedJsonContractVerified : null,
       },
       performance: {
         checked: onlineOnboard,
         sampleKind: onlineOnboard ? "single-local-installed-package-smoke" : null,
         onboardDurationsMs: onlineOnboard ? onboardDurationsMs : null,
         retainedVerificationDurationMs: onlineOnboard ? retainedVerificationDurationMs : null,
+        retainedVerificationSampleKind: onlineOnboard ? "copy-ready-text-command" : null,
         thresholdEnforced: false,
       },
       assurance: { networkUsed: onlineOnboard, paidServiceInvoked: false, temporaryBytesRetained: false },

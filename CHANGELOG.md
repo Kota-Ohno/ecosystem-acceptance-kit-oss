@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.12.0 — 2026-07-14
+
+- Print a copy-ready `pnpm --dir <installed-kit> verify-evidence` command after
+  text-mode onboarding, including the exact reusable workspace, Evidence
+  directory, and packet digest so it works from any current directory.
+- Quote POSIX-shell arguments and suppress the generated command for paths with
+  terminal control or bidirectional-formatting characters.
+
 ## 0.11.1 — 2026-07-14
 
 - Split onboarding, retained verification, and their shared bounded runtime into

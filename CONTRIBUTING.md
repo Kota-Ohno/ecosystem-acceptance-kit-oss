@@ -8,12 +8,14 @@ records its assurance limits explicitly.
 Before opening a pull request:
 
 ```bash
-npm run check
-npm run demo
-npm run audit:secrets
-npm pack --dry-run
+corepack enable
+pnpm install --frozen-lockfile
+pnpm check
+pnpm demo
+pnpm audit:secrets
+pnpm pack --dry-run
 ```
 
-Run `npm run accept` for lock, runner, or cross-repository behavior changes.
+Run `pnpm accept` for lock, runner, or cross-repository behavior changes.
 Use synthetic fixtures only and never commit `.acceptance-output/`, checkout
 workspaces, credentials, local paths, or signing keys.

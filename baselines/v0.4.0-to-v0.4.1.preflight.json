@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "outcome": "analyzed",
+  "comparedAt": "2026-07-14T05:58:19.071Z",
+  "manifests": {
+    "olderSha256": "8cebf9195918d8af00083f7d0eed1717eab3b7940ff31c7cce96178f123ed959",
+    "newerSha256": "cdd27e12a41b2914317e2f070d3a695af8bb0846f6117adca6351ae69c544a29"
+  },
+  "repositories": {
+    "agentBlackBox": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "e89afaa2ad6e61e1f4720d3c92fb6f22b0b8a77d",
+      "newerRevision": "9e223e9408544b0a02b1caffdca0c6f9bca2e6d3",
+      "changedPathCount": 8,
+      "categories": {
+        "product": 8,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 2
+      },
+      "paths": [
+        "CONTRIBUTING.md",
+        "README.md",
+        "docs/COMPATIBILITY.md",
+        "docs/INTEROP.md",
+        "package-lock.json",
+        "package.json",
+        "pnpm-lock.yaml",
+        "scripts/check-sol-ledger.sh"
+      ],
+      "pathsTruncated": false
+    },
+    "solLedger": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "ece6396f8c69cfcee565c9a0115e10b9d2c4fd6a",
+      "newerRevision": "ab75dfc78962563baccb39b936986055044441f1",
+      "changedPathCount": 13,
+      "categories": {
+        "product": 0,
+        "protocol": 13,
+        "schema": 5,
+        "acceptance": 0
+      },
+      "paths": [
+        "AGENTS.md",
+        "CONTRIBUTING.md",
+        "README.md",
+        "crates/sol-ledger-schema/examples/generate-types.rs",
+        "package-lock.json",
+        "package.json",
+        "packages/typescript/src/generated/artifact-ref.ts",
+        "packages/typescript/src/generated/event-envelope.ts",
+        "packages/typescript/src/generated/index.ts",
+        "packages/typescript/src/generated/provenance-edge.ts",
+        "packages/typescript/src/generated/security-policy.ts",
+        "pnpm-lock.yaml",
+        "scripts/generate-types.mjs"
+      ],
+      "pathsTruncated": false
+    },
+    "evidenceForge": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "6747fdd1fea1618ef96302e1442c39e474d8a7e1",
+      "newerRevision": "4dfbf9a000bb853d5864f8d52f08fa98a695d5de",
+      "changedPathCount": 1,
+      "categories": {
+        "product": 1,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [
+        "package.json"
+      ],
+      "pathsTruncated": false
+    }
+  },
+  "protocolContract": {
+    "changed": false,
+    "relocated": false,
+    "olderRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "newerRevision": "6139085503dec278e86cf0d9673d84ba34eb1e92",
+    "changedPathCount": 0,
+    "schemaChanged": false,
+    "schemaPaths": [],
+    "schemaPathsTruncated": false
+  },
+  "decision": {
+    "changeClass": "contract-review",
+    "fullAcceptanceRequired": true,
+    "manualReviewRequired": true
+  },
+  "assurance": {
+    "repositoryCodeExecuted": false,
+    "exactCommitsCompared": true,
+    "semanticCompatibilityProven": false,
+    "networkUsed": true,
+    "timestampAttested": false
+  },
+  "integrity": {
+    "algorithm": "sha256-jcs",
+    "receiptSha256": "a83e58ad6d08659ffdc5e6f71aa03bdc9b06090e44eed28192be26bcee7188c6"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "ecosystem-acceptance-kit",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "type": "module",
   "description": "Revision-pinned acceptance runner for the Evidence Forge ecosystem",
@@ -8,7 +8,7 @@
   "engines": {
     "node": ">=24.4"
   },
-  "packageManager": "npm@11.12.1",
+  "packageManager": "pnpm@11.0.8",
   "bin": {
     "ecosystem-accept": "bin/ecosystem-accept.mjs"
   },

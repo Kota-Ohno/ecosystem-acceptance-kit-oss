@@ -20,8 +20,10 @@ Forge's exact schema and Rust/JCS compatibility gate.
 
 ```bash
 git clone https://github.com/Kota-Ohno/ecosystem-acceptance-kit-oss.git
-cd ecosystem-acceptance-kit
-npm run demo
+cd ecosystem-acceptance-kit-oss
+corepack enable
+pnpm install --frozen-lockfile
+pnpm demo
 ```
 
 The deterministic demo uses only Node.js. It verifies a synthetic three-product
@@ -30,7 +32,7 @@ no full-acceptance claim. Check every full-run prerequisite and private reposito
 access in one pass with:
 
 ```bash
-npm run doctor
+pnpm doctor
 ```
 
 Use `node bin/ecosystem-accept.mjs doctor --offline` to check local tools without
@@ -39,7 +41,8 @@ contacting GitHub. Add `--json` to either `demo` or `doctor` for automation.
 ## Full acceptance requirements
 
 - Node.js 24.4 or newer
-- Git, npm, pnpm, and a Rust toolchain with Cargo
+- Git, pnpm, and a Rust toolchain with Cargo. npm is also checked because the
+  packed-artifact compatibility suite deliberately verifies npm consumers.
 - Read access to the three clean-history GitHub repositories while the public
   candidates remain private
 
@@ -50,7 +53,7 @@ a sandbox or an authorship attestation.
 ## Run full acceptance
 
 ```bash
-npm run accept
+pnpm accept
 ```
 
 By default, temporary checkouts are removed and results are written under
@@ -63,13 +66,13 @@ node bin/ecosystem-accept.mjs run --keep-workspace
 Useful non-executing commands:
 
 ```bash
-npm run plan
-npm run compare -- acceptance.lock.json next.lock.json --output preflight.json
-npm run index -- append --receipt acceptance-receipt.json \
+pnpm plan
+pnpm compare acceptance.lock.json next.lock.json --output preflight.json
+pnpm index append --receipt acceptance-receipt.json \
   --expected-receipt-sha256 RECEIPT_SHA256 --output acceptance-index-1.json
-npm run index -- verify --index acceptance-index-1.json \
+pnpm index verify --index acceptance-index-1.json \
   --expected-index-sha256 INDEX_SHA256
-npm run verify-receipt -- .acceptance-output/<run-id>/acceptance-receipt.json
+pnpm verify-receipt .acceptance-output/<run-id>/acceptance-receipt.json
 ```
 
 `plan` validates and prints the pinned inputs without cloning or executing them.
@@ -106,9 +109,9 @@ heads and exact revisions, not the original private acceptance artifacts.
 ## Development
 
 ```bash
-npm test
-npm run check
-npm run audit:secrets
+pnpm test
+pnpm check
+pnpm audit:secrets
 ```
 
 The secret audit requires Gitleaks and scans both complete Git history and the

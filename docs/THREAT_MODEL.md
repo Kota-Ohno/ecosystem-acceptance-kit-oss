@@ -7,7 +7,7 @@ locations to uncredentialed `https://github.com/...` URLs and requires full
 lowercase commit SHAs, but it does not establish that a commit is benign or
 authored by a particular party. Operators must review lock changes.
 
-`npm`, `pnpm`, Cargo, and the pinned repositories run with the current user's
+`pnpm`, npm compatibility consumers, Cargo, and the pinned repositories run with the current user's
 permissions and may access the network. The kit is orchestration, not a sandbox.
 
 ## Fail-closed properties

@@ -4,15 +4,15 @@
   "repositories": {
     "agentBlackBox": {
       "url": "https://github.com/Kota-Ohno/agent-black-box-oss.git",
-      "revision": "9e223e9408544b0a02b1caffdca0c6f9bca2e6d3"
+      "revision": "e89afaa2ad6e61e1f4720d3c92fb6f22b0b8a77d"
     },
     "solLedger": {
       "url": "https://github.com/Kota-Ohno/sol-ledger-protocol-oss.git",
-      "revision": "ab75dfc78962563baccb39b936986055044441f1"
+      "revision": "ece6396f8c69cfcee565c9a0115e10b9d2c4fd6a"
     },
     "evidenceForge": {
       "url": "https://github.com/Kota-Ohno/evidence-forge-oss.git",
-      "revision": "4dfbf9a000bb853d5864f8d52f08fa98a695d5de"
+      "revision": "6747fdd1fea1618ef96302e1442c39e474d8a7e1"
     }
   }
 }

@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "outcome": "analyzed",
+  "comparedAt": "2026-07-14T05:21:35.336Z",
+  "manifests": {
+    "olderSha256": "8171e377611e12ebc3c5660857d20ab9d00ab4319bb6050c6f15c0bb334934f5",
+    "newerSha256": "5971b2fd400f8daa2c842cdd75c4172137514678c51462b09b5d813269faac5d"
+  },
+  "repositories": {
+    "agentBlackBox": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "985ea3fa4a9ebfa63b70d975472f5b13b2b69d6f",
+      "newerRevision": "d492aec7a9cb213c90116104551c7d768adee5bb",
+      "changedPathCount": 9,
+      "categories": {
+        "product": 9,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [
+        ".github/pull_request_template.md",
+        ".gitignore",
+        "CONTRIBUTING.md",
+        "README.md",
+        "SECURITY.md",
+        "docs/ROADMAP.md",
+        "package.json",
+        "scripts/audit-secrets.mjs",
+        "test/audit-secrets.test.mjs"
+      ],
+      "pathsTruncated": false
+    },
+    "solLedger": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "f1b447590622f84604b74610d06c00ac330f4a7d",
+      "newerRevision": "5953a20f5926463931e6cc7ba635538e63bba3d1",
+      "changedPathCount": 15,
+      "categories": {
+        "product": 0,
+        "protocol": 15,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [
+        ".github/pull_request_template.md",
+        ".gitignore",
+        "CONTRIBUTING.md",
+        "Cargo.toml",
+        "LICENSE",
+        "README.md",
+        "SECURITY.md",
+        "crates/sol-ledger-cli/Cargo.toml",
+        "crates/sol-ledger-schema/Cargo.toml",
+        "docs/ROADMAP.md",
+        "package-lock.json",
+        "package.json",
+        "packages/typescript/package.json",
+        "scripts/audit-secrets.mjs",
+        "scripts/audit-secrets.test.mjs"
+      ],
+      "pathsTruncated": false
+    },
+    "evidenceForge": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "81cd6fc5f9885e678b526e1e8a96b51d2059c45f",
+      "newerRevision": "9bcde2e5c9d63a56ecc4ed6a90d8e65d027548c8",
+      "changedPathCount": 6,
+      "categories": {
+        "product": 6,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [
+        ".github/pull_request_template.md",
+        ".gitignore",
+        "CONTRIBUTING.md",
+        "README.md",
+        "SECURITY.md",
+        "docs/ROADMAP.md"
+      ],
+      "pathsTruncated": false
+    }
+  },
+  "protocolContract": {
+    "changed": false,
+    "relocated": false,
+    "olderRevision": "cc955517a37a544583354b78fb2bba20239a764f",
+    "newerRevision": "cc955517a37a544583354b78fb2bba20239a764f",
+    "changedPathCount": 0,
+    "schemaChanged": false,
+    "schemaPaths": [],
+    "schemaPathsTruncated": false
+  },
+  "decision": {
+    "changeClass": "implementation",
+    "fullAcceptanceRequired": true,
+    "manualReviewRequired": false
+  },
+  "assurance": {
+    "repositoryCodeExecuted": false,
+    "exactCommitsCompared": true,
+    "semanticCompatibilityProven": false,
+    "networkUsed": true,
+    "timestampAttested": false
+  },
+  "integrity": {
+    "algorithm": "sha256-jcs",
+    "receiptSha256": "579464f3480747c3563a68132e495b51d7d6472c4b0e84555b40c65e1e7ebcef"
+  }
+}

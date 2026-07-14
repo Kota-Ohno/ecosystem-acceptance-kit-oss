@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "sequence": 1,
+      "receiptSha256": "2fa19f05731361865fd049bdcf49225dfbac1d9776adfcddea6ba8c842bf2556",
+      "previousEntrySha256": null,
+      "runId": "2026-07-14T03-40-19.835Z-b14fb351",
+      "completedAt": "2026-07-14T03:41:34.568Z",
+      "revisions": {
+        "agentBlackBox": "1ed2f7bfc5330167a583ce42401f5158f458f03d",
+        "evidenceForge": "ccef4d91ddd0d13d527565a44fce8279e55292c6",
+        "solLedger": "5afd8ffd39288d2008ae0f738ba4a69c15e8ca47",
+        "solLedgerContract": "cc955517a37a544583354b78fb2bba20239a764f"
+      },
+      "artifactSha256s": {
+        "stackReport": "190c0e6292d1c06d334e936d27eb9b8c14b25e6fb3f0d384d44eac884b1b6642",
+        "releasePack": "b557c6209d94b0b47effc5ae16c05c720a5ffc61e28aedf331228dfb6f00255b",
+        "verificationReceipt": "97bf470a0ae95ce06b208f0db75e6f2c066cd8275f2b5adad6e665ec80b63890"
+      },
+      "entrySha256": "7db12f199081121ca8838744cb758879737381fc8a896b1186bdb6e655286331"
+    },
+    {
+      "sequence": 2,
+      "receiptSha256": "91e3b8e80c948e0acb75478cfc95693cd4a35851c74e655f61d0916c69d55232",
+      "previousEntrySha256": "7db12f199081121ca8838744cb758879737381fc8a896b1186bdb6e655286331",
+      "runId": "2026-07-14T03-57-42.763Z-e7f5c51c",
+      "completedAt": "2026-07-14T03:58:56.987Z",
+      "revisions": {
+        "agentBlackBox": "985ea3fa4a9ebfa63b70d975472f5b13b2b69d6f",
+        "evidenceForge": "81cd6fc5f9885e678b526e1e8a96b51d2059c45f",
+        "solLedger": "f1b447590622f84604b74610d06c00ac330f4a7d",
+        "solLedgerContract": "cc955517a37a544583354b78fb2bba20239a764f"
+      },
+      "artifactSha256s": {
+        "stackReport": "d4d0d6925271a7d303b27a602c4ac2a37be6ff257b1bedafe9eb6e2aea06b370",
+        "releasePack": "05ac8bf26e87c4e6b9b702cdbec978f962f8546e7c2b8f564d542a7091426569",
+        "verificationReceipt": "e0d33d541e04f98def4f6f048bb4a38dbf4fd835e86291d0136b77f976923470"
+      },
+      "entrySha256": "a73557309276fd10eb95df36386875d4772ba5df69808965f833602cfb0b4a07"
+    },
+    {
+      "sequence": 3,
+      "receiptSha256": "ab7549168b86e2fb321b0841531b4e37e9192d9301bf5470e96f391f3f99e3e7",
+      "previousEntrySha256": "a73557309276fd10eb95df36386875d4772ba5df69808965f833602cfb0b4a07",
+      "runId": "2026-07-14T05-21-44.550Z-27673415",
+      "completedAt": "2026-07-14T05:22:59.820Z",
+      "revisions": {
+        "agentBlackBox": "d492aec7a9cb213c90116104551c7d768adee5bb",
+        "evidenceForge": "9bcde2e5c9d63a56ecc4ed6a90d8e65d027548c8",
+        "solLedger": "5953a20f5926463931e6cc7ba635538e63bba3d1",
+        "solLedgerContract": "cc955517a37a544583354b78fb2bba20239a764f"
+      },
+      "artifactSha256s": {
+        "stackReport": "1257e85ef0b0a68eced2e0d2c92fc98b6a53d20810a270f7e91a8d8d7a56a40f",
+        "releasePack": "d0f4b43eee8da5497e18019cd76d1aafc3fb78e59670e4891fdc3581ad165c67",
+        "verificationReceipt": "9671fbe2c5c321ea54a6db44307c09251e8ad722029e7da0976eaba87ba3e4a1"
+      },
+      "entrySha256": "8e2535c8163a991e58ca3fa12d3d3a696f9ce3ab99206f75c5218b0760544405"
+    },
+    {
+      "sequence": 4,
+      "receiptSha256": "9daaff123d258229978b2eb39aceab1c1ffdcedc7c638682da2d0dd0d4f944f0",
+      "previousEntrySha256": "8e2535c8163a991e58ca3fa12d3d3a696f9ce3ab99206f75c5218b0760544405",
+      "runId": "2026-07-14T05-32-42.831Z-902f1f4e",
+      "completedAt": "2026-07-14T05:33:59.407Z",
+      "revisions": {
+        "agentBlackBox": "e89afaa2ad6e61e1f4720d3c92fb6f22b0b8a77d",
+        "evidenceForge": "6747fdd1fea1618ef96302e1442c39e474d8a7e1",
+        "solLedger": "ece6396f8c69cfcee565c9a0115e10b9d2c4fd6a",
+        "solLedgerContract": "6139085503dec278e86cf0d9673d84ba34eb1e92"
+      },
+      "artifactSha256s": {
+        "stackReport": "9cbcc043da4f4155cbd8293ad978b2a29054a01696aaef926931e70e4fd2c201",
+        "releasePack": "6822b5995e6c8c6caa51794bc58fa761446889207bb1868b792f79b7cb3efed1",
+        "verificationReceipt": "eda10c25d90e22c19b91bcf7487685f2038681c868628bd35b479e4ac607ca10"
+      },
+      "entrySha256": "f791aa8f21e4a1efdb4427e00ad1617f93241cab93861d3e89246abc33d7b9f6"
+    }
+  ],
+  "anchorPolicy": {
+    "expectedReceiptSha256Required": true,
+    "independentChannelAttested": false,
+    "timestampAttested": false
+  },
+  "integrity": {
+    "algorithm": "sha256-jcs",
+    "indexSha256": "c720fc627d1cfcd696b8d4d0b3765b6e5fbcb5a4a7bd49004c4324165c278e43"
+  }
+}

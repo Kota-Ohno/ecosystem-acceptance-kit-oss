@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "outcome": "analyzed",
+  "comparedAt": "2026-07-14T03:59:18.188Z",
+  "manifests": {
+    "olderSha256": "7ff8db5ba8b7414789da1387de8c39cc6864918cb2750e43fba7f4ca88c27a23",
+    "newerSha256": "8171e377611e12ebc3c5660857d20ab9d00ab4319bb6050c6f15c0bb334934f5"
+  },
+  "repositories": {
+    "agentBlackBox": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "1ed2f7bfc5330167a583ce42401f5158f458f03d",
+      "newerRevision": "985ea3fa4a9ebfa63b70d975472f5b13b2b69d6f",
+      "changedPathCount": 3,
+      "categories": {
+        "product": 3,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 1
+      },
+      "paths": [
+        "README.md",
+        "docs/COMPATIBILITY.md",
+        "docs/ROADMAP.md"
+      ],
+      "pathsTruncated": false
+    },
+    "solLedger": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "5afd8ffd39288d2008ae0f738ba4a69c15e8ca47",
+      "newerRevision": "f1b447590622f84604b74610d06c00ac330f4a7d",
+      "changedPathCount": 3,
+      "categories": {
+        "product": 0,
+        "protocol": 3,
+        "schema": 0,
+        "acceptance": 1
+      },
+      "paths": [
+        "README.md",
+        "docs/ROADMAP.md",
+        "docs/consumer-compatibility.md"
+      ],
+      "pathsTruncated": false
+    },
+    "evidenceForge": {
+      "changed": true,
+      "relocated": false,
+      "olderRevision": "ccef4d91ddd0d13d527565a44fce8279e55292c6",
+      "newerRevision": "81cd6fc5f9885e678b526e1e8a96b51d2059c45f",
+      "changedPathCount": 3,
+      "categories": {
+        "product": 3,
+        "protocol": 0,
+        "schema": 0,
+        "acceptance": 0
+      },
+      "paths": [
+        "README.md",
+        "docs/ROADMAP.md",
+        "docs/sol-ledger-adapter.md"
+      ],
+      "pathsTruncated": false
+    }
+  },
+  "protocolContract": {
+    "changed": false,
+    "relocated": false,
+    "olderRevision": "cc955517a37a544583354b78fb2bba20239a764f",
+    "newerRevision": "cc955517a37a544583354b78fb2bba20239a764f",
+    "changedPathCount": 0,
+    "schemaChanged": false,
+    "schemaPaths": [],
+    "schemaPathsTruncated": false
+  },
+  "decision": {
+    "changeClass": "implementation",
+    "fullAcceptanceRequired": true,
+    "manualReviewRequired": false
+  },
+  "assurance": {
+    "repositoryCodeExecuted": false,
+    "exactCommitsCompared": true,
+    "semanticCompatibilityProven": false,
+    "networkUsed": true,
+    "timestampAttested": false
+  },
+  "integrity": {
+    "algorithm": "sha256-jcs",
+    "receiptSha256": "5eb317489a5a8b61a0fa4c769b950c8a56f843dd2f43fb820487a14a7aae3832"
+  }
+}

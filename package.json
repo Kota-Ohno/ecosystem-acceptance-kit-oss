@@ -1,0 +1,39 @@
+{
+  "name": "ecosystem-acceptance-kit",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "description": "Revision-pinned acceptance runner for the Evidence Forge ecosystem",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24.4"
+  },
+  "packageManager": "npm@11.12.1",
+  "bin": {
+    "ecosystem-accept": "bin/ecosystem-accept.mjs"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "acceptance.lock.json",
+    "baselines",
+    "docs/THREAT_MODEL.md",
+    "scripts/audit-secrets.mjs",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "demo": "node bin/ecosystem-accept.mjs demo",
+    "doctor": "node bin/ecosystem-accept.mjs doctor",
+    "audit:secrets": "node scripts/audit-secrets.mjs",
+    "accept": "node bin/ecosystem-accept.mjs run",
+    "plan": "node bin/ecosystem-accept.mjs plan",
+    "compare": "node bin/ecosystem-accept.mjs compare",
+    "index": "node bin/ecosystem-accept.mjs index",
+    "verify-receipt": "node bin/ecosystem-accept.mjs verify-receipt",
+    "test": "node --test",
+    "check": "node --check bin/ecosystem-accept.mjs && node --check lib/demo.mjs && node --check lib/doctor.mjs && node --check lib/index.mjs && node --check lib/manifest.mjs && node --check lib/preflight.mjs && node --check lib/receipt.mjs && node --check lib/runner.mjs && node --check scripts/audit-secrets.mjs && node --test"
+  }
+}

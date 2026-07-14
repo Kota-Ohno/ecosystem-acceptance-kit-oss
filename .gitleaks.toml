@@ -1,0 +1,11 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Generated local acceptance outputs are ignored and excluded from every package allowlist"
+paths = ['''^\.acceptance-output/''']
+
+[[allowlists]]
+description = "Verified append-only index links are deterministic SHA-256 values, not Sentry credentials"
+regexTarget = "match"
+regexes = ['''previousEntrySha256\": \"[0-9a-f]{64}''']

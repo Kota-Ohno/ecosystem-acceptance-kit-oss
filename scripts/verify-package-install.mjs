@@ -65,6 +65,14 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
     if (!help.includes("--exact-file FILE") || !help.includes("verify-receipt FILE")) {
       throw new Error("Installed Kit help is incomplete");
     }
+    const onboardingDoctor = parseJson(run(executable, [
+      "doctor", "--onboard", "--offline", "--json",
+    ], { cwd: consumer }).stdout, "Installed Kit onboarding doctor");
+    if (onboardingDoctor.scope !== "onboard" || onboardingDoctor.outcome !== "local_ready" ||
+        onboardingDoctor.onboardingReady !== null || onboardingDoctor.repositoryAccess?.checked !== false ||
+        onboardingDoctor.checks?.some((entry) => ["npm", "cargo"].includes(entry.name))) {
+      throw new Error("Installed Kit onboarding doctor contract failed");
+    }
     const demo = parseJson(run(executable, ["demo", "--json"], { cwd: consumer }).stdout, "Installed Kit demo");
     if (demo.version !== 1 || demo.outcome !== "demo_verified" || demo.assurance?.networkUsed !== false ||
         demo.assurance?.repositoryCodeExecuted !== false || demo.checks?.tamperRejected !== true) {
@@ -111,6 +119,7 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
         offlineInstallVerified: true,
         installedVersionVerified: true,
         installedHelpVerified: true,
+        installedOnboardingDoctorVerified: true,
         installedDemoVerified: true,
         diagnosticRedactionVerified: true,
         onlineOnboardVerified: onlineVerified,

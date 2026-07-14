@@ -57,5 +57,8 @@
 - [x] M12j — Verify the actual packed Kit through an offline, lifecycle-script-free
   clean install on every `pnpm check`, with an explicit online installed-onboard
   mode for release-candidate verification.
+- [x] M12k — Add a focused onboarding doctor that checks only the tools, platform,
+  and single private repository required for first Evidence, without reporting
+  unrelated Cargo/npm/full-ecosystem failures.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

@@ -61,6 +61,25 @@ test("isolates child environment secrets and bounds command duration", async (co
   );
 });
 
+test("preserves explicit network configuration and resolves default Rust homes", (context) => {
+  const root = mkdtempSync(join(tmpdir(), "ecosystem-environment-"));
+  context.after(() => rmSync(root, { recursive: true, force: true }));
+  const hostHome = join(root, "host-home");
+  mkdirSync(join(hostHome, ".rustup"), { recursive: true });
+  mkdirSync(join(hostHome, ".cargo"), { recursive: true });
+  const environment = createExecutionEnvironment(join(root, "workspace"), {
+    HOME: hostHome, PATH: "/tools", HTTPS_PROXY: "http://proxy.example:8080",
+    NO_PROXY: "localhost", NODE_EXTRA_CA_CERTS: "/certs/company.pem", SECRET_TOKEN: "excluded",
+  });
+  assert.equal(environment.RUSTUP_HOME, join(hostHome, ".rustup"));
+  assert.equal(environment.CARGO_HOME, join(hostHome, ".cargo"));
+  assert.equal(environment.HTTPS_PROXY, "http://proxy.example:8080");
+  assert.equal(environment.NO_PROXY, "localhost");
+  assert.equal(environment.NODE_EXTRA_CA_CERTS, "/certs/company.pem");
+  assert.equal(environment.SECRET_TOKEN, undefined);
+  assert.notEqual(environment.HOME, hostHome);
+});
+
 test("timeout force-kills a SIGTERM-resistant descendant after its parent exits", async (context) => {
   const root = mkdtempSync(join(tmpdir(), "ecosystem-process-tree-"));
   context.after(() => rmSync(root, { recursive: true, force: true }));
@@ -75,12 +94,24 @@ test("timeout force-kills a SIGTERM-resistant descendant after its parent exits"
   );
   assert.ok(Date.now() - started < 4_000);
   const descendantPid = Number(readFileSync(pidPath, "utf8"));
-  let alive = true;
+  let alive = processIsRunning(descendantPid);
   for (let attempt = 0; attempt < 20 && alive; attempt += 1) {
-    try { process.kill(descendantPid, 0); }
-    catch (error) { if (error.code === "ESRCH") alive = false; else throw error; }
     if (alive) await new Promise((resolve) => setTimeout(resolve, 25));
+    alive = processIsRunning(descendantPid);
   }
   if (alive) process.kill(descendantPid, "SIGKILL");
   assert.equal(alive, false);
 });
+
+function processIsRunning(pid) {
+  try { process.kill(pid, 0); }
+  catch (error) { if (error.code === "ESRCH") return false; throw error; }
+  if (process.platform !== "linux") return true;
+  try {
+    const stat = readFileSync(`/proc/${String(pid)}/stat`, "utf8");
+    return stat.slice(stat.lastIndexOf(") ") + 2, stat.lastIndexOf(") ") + 3) !== "Z";
+  } catch (error) {
+    if (error.code === "ENOENT") return false;
+    throw error;
+  }
+}

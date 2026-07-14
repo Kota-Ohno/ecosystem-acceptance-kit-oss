@@ -164,6 +164,7 @@ pnpm doctor --onboard
 pnpm smoke:package
 
 # Release-candidate smoke through the installed tarball and pinned private repo.
+# Its JSON includes non-gating first/repeat/verification timing samples.
 pnpm smoke:package:onboard
 
 # Inspect pinned work without executing repository code, then run acceptance.
@@ -173,6 +174,9 @@ pnpm accept
 # Re-verify a retained result later.
 pnpm verify-receipt .acceptance-output/<run-id>/acceptance-receipt.json
 ```
+
+The current repeatable scenario and three-sample baseline are recorded in
+[`docs/PERFORMANCE.md`](docs/PERFORMANCE.md).
 
 Add `--json` to `demo` or `doctor` when another tool consumes the result.
 

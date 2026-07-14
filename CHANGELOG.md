@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.0 — 2026-07-14
+
+- Add an explicit one-command onboarding path from pinned checkout through the
+  first locally verified Evidence packet with ten-step progress.
+- Install dependencies with lifecycle scripts disabled, keep tool resolution
+  outside checkout/output roots, and require a clean checkout after execution.
+- Refuse overlapping or existing output paths and keep child failures bounded
+  without forwarding captured package-manager or product stderr.
+- Remove workspace/output directories from child PATH, run a separate packet
+  verification pass, and repeat every pinned-checkout invariant after execution.
+- Execute only from a fresh disposable checkout so ignored dependencies, build
+  output, or incremental state in a reused inspection checkout cannot run.
+
 ## 0.5.1 — 2026-07-14
 
 - Pin the merged Evidence Forge warm-quickstart optimization.

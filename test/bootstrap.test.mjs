@@ -149,6 +149,7 @@ test("pins Git before a future checkout directory can affect PATH lookup", async
     sourceEnvironment: { ...process.env, PATH: `${join(workspace, "agentBlackBox")}${delimiter}${process.env.PATH}` },
   });
   assert.equal(calls.every((entry) => isAbsolute(entry.command) && !entry.command.startsWith(workspace)), true);
+  assert.equal(calls.every((entry) => !entry.environment.PATH.split(delimiter).includes(join(workspace, "agentBlackBox"))), true);
 });
 
 test("offline doctor also ignores executables inside a reused checkout", async () => {

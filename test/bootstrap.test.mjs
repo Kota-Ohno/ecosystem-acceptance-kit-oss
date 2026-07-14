@@ -52,6 +52,38 @@ test("bootstraps exact clean checkouts without executing repository code", async
   assert.match(formatBootstrap(report), /Full acceptance is separate/u);
 });
 
+test("supports an explicit scoped checkout without weakening the default all-repository bootstrap", async () => {
+  const root = temporaryRoot();
+  const calls = [];
+  const progress = [];
+  const report = await bootstrapWorkspace({
+    manifest,
+    workspaceRoot: join(root, "workspace"),
+    repositorySelection: ["evidenceForge"],
+    command: fakeCommand(calls),
+    diagnose: fakeDoctor,
+    reporter: (event) => progress.push(event),
+  });
+
+  assert.deepEqual(Object.keys(report.repositories), ["evidenceForge"]);
+  assert.equal(report.assurance.exactRevisionsChecked, true);
+  assert.equal(report.assurance.allRepositoriesChecked, false);
+  assert.equal(calls.filter((entry) => entry.arguments_[0] === "fetch").length, 1);
+  assert.deepEqual(progress.filter((entry) => entry.state === "done").map((entry) => entry.position), [1, 2, 3]);
+  assert.match(formatBootstrap(report), /evidenceForge/u);
+  await bootstrapWorkspace({
+    manifest, workspaceRoot: join(root, "second"), repositorySelection: ["evidenceForge"],
+    command: fakeCommand([]), diagnose: fakeDoctor,
+  });
+  await assert.rejects(
+    bootstrapWorkspace({
+      manifest, workspaceRoot: join(root, "invalid"), repositorySelection: ["unknown"],
+      command: fakeCommand([]), diagnose: fakeDoctor,
+    }),
+    /unique known repository names/u,
+  );
+});
+
 test("reuses only clean exact checkouts and refuses dirty or symlink paths", async () => {
   const root = temporaryRoot();
   const workspace = join(root, "workspace");

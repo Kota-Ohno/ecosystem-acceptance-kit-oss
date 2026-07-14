@@ -51,5 +51,8 @@
   on the documented reference scenario.
 - [x] M12h — Pin the merged Evidence Forge local-file forge workflow and verify
   the exact revision across the complete local ecosystem acceptance path.
+- [x] M12i — Add one-command caller-source onboarding, keep tutorial
+  compatibility, omit source inputs from the final report, and remove two
+  unused product checkouts so the documented median stays below five seconds.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

@@ -35,27 +35,48 @@ proves that a synthetic receipt verifies while a mutation is rejected. It does
 not claim that the real repositories passed. `pnpm doctor` checks the tools,
 versions, GitHub access, and other prerequisites needed by full acceptance.
 
-Create your first real, locally verified Evidence with one explicit command:
+Run the local tutorial and create a verified packet with one command:
 
 ```bash
 pnpm onboard
 ```
 
-`onboard` shows ten progress steps, prepares the exact pinned checkouts,
+`onboard` shows eight progress steps, prepares the exact pinned Evidence Forge checkout,
 installs Evidence Forge dependencies with lifecycle scripts disabled, and runs
-its local-only quickstart from a fresh disposable execution checkout. It then
-runs a separate packet-verification pass, revalidates the pinned clean checkout,
-and removes every disposable execution byte. The result is written to
-`./my-first-evidence`; inspection-only checkouts remain in
+its local-only tutorial from a fresh disposable execution checkout. Caller-source
+mode runs the pinned local-file workflow instead. Both modes then run a separate
+packet-verification pass, revalidate the pinned clean checkout, and remove every
+disposable execution byte. The result is written to
+`./my-first-evidence`; the inspection-only Evidence Forge checkout remains in
 `./evidence-ecosystem-workspace`.
 
+For a caller-selected local text file, quote, and availability time:
+
+```bash
+pnpm --silent onboard \
+  --source ./notes.txt \
+  --exact "A uniquely identifying quote" \
+  --available-at 2026-07-11T00:00:00Z \
+  --directory ./my-evidence \
+  --promote-immediately
+```
+
+`--promote-immediately` preauthorizes promotion before the Candidate exists;
+this shortest path does not pause for human Candidate inspection. The final
+Kit report omits the source path and quote, while the private Evidence output
+retains the source snapshot and citation needed for verification. Keep
+`--silent` so pnpm itself does not echo caller arguments. Use Evidence Forge's
+separate `capture` then `promote` commands when Candidate inspection is required.
+
 Unlike `demo` and `bootstrap`, onboarding intentionally executes the pinned
-Evidence Forge quickstart and may access GitHub and the package registry. It
+Evidence Forge workflow and may access GitHub and the package registry. It
 has no configured paid-service integration and does not overwrite an existing
 Evidence directory.
 Onboarding currently supports macOS and Linux; native Windows is rejected before
 checkout because the wider acceptance stack contains shell-based checks.
-Choose fresh locations explicitly when the defaults already exist:
+Onboarding fetches only Evidence Forge because the other products are not used
+to author this packet. Use `bootstrap` below when all three inspection checkouts
+are wanted. Choose fresh locations explicitly when the defaults already exist:
 
 ```bash
 pnpm onboard --workspace-root ./evidence-stack --directory ./evidence-run-2
@@ -75,6 +96,11 @@ checkout.
 Existing checkouts are reused only when their revision, origin, and clean state
 match the lock. Use `--json` when another tool consumes the final report;
 progress remains on stderr so stdout stays machine-readable.
+Tutorial onboarding retains its version 1 JSON shape. Caller-source onboarding
+uses version 2 with `workflow: "local_file"` and a closed path-free `evidence`
+result plus `scope: { repositoriesChecked: ["evidenceForge"],
+allRepositoriesChecked: false }`. The text result carries the same scope warning,
+so a reused workspace cannot imply that Agent Black Box or Sol Ledger was checked.
 
 Bootstrap is for quick inspection and local product onboarding. Full acceptance
 is deliberately separate: `pnpm accept` creates fresh disposable checkouts and
@@ -87,8 +113,13 @@ Running bootstrap therefore does not shorten a later full acceptance run.
 # Fast, offline confidence in the receipt verifier.
 pnpm demo
 
-# One-command path to a real local Evidence packet.
+# One-command tutorial packet.
 pnpm onboard
+
+# One-command packet from a caller-selected local source.
+pnpm --silent onboard --source ./notes.txt --exact "Unique quote" \
+  --available-at 2026-07-11T00:00:00Z --directory ./my-evidence \
+  --promote-immediately
 
 # Diagnose all full-run prerequisites; use --offline to avoid GitHub access.
 pnpm doctor
@@ -132,6 +163,10 @@ the results into one local receipt.
 - Onboarding also executes pinned Evidence Forge code after installing packages
   with lifecycle scripts disabled; use `bootstrap` when checkout-only inspection
   is required.
+- Source paths and exact quotes passed as CLI arguments can be visible to the
+  local shell history and operating-system process inspection. The Kit does not
+  repeat them in progress, errors, or its final report; use this mode only under
+  an appropriate local account boundary.
 - The kit does not publish artifacts or send telemetry, but full acceptance does
   access GitHub and package registries. The demo is the offline path.
 - Retain receipt heads through an independent channel and protect local output.

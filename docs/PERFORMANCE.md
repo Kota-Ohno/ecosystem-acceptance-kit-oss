@@ -1,6 +1,6 @@
 # Performance log
 
-## First verified Evidence onboarding — 2026-07-14
+## First verified Evidence onboarding v0.6.0 — 2026-07-14
 
 Scenario: Apple silicon / macOS / Node.js v26.0.0 / pnpm 11.0.8, warm package
 cache, a new workspace and Evidence directory for every sample, wall time from
@@ -27,3 +27,42 @@ Checkout and package download remain the dominant work and are not skipped. The
 command is retained for its two-thirds reduction in operator steps, while the
 separate checkout-only bootstrap remains available when code execution is not
 desired.
+
+## Caller-source onboarding and scoped checkout — 2026-07-14
+
+Scenario: Apple silicon / macOS / Node.js v26.0.0 / pnpm 11.0.8, warm package
+cache, a new workspace and output for every sample, the same Kit README source,
+exact quote, and availability time. Wall time includes checkout, dependency
+installation, build, packet creation, a separate packet-verification process,
+and post-run checkout verification. Three samples use each path.
+
+Target: one operator command and below 10 seconds median. A scoped manual path is
+reported separately so convenience is not confused with doing less work.
+
+| path | samples | median | operator commands |
+| --- | --- | ---: | ---: |
+| scoped manual bootstrap + install + local forge | 3664 / 3464 / 3574 ms | 3574 ms | 3 |
+| hardened Evidence-Forge-scoped `pnpm --silent onboard` | 4233 / 4347 / 4271 ms | 4271 ms | 1 |
+| full-workspace manual path (reference only; more work) | 6040 / 5880 / 6140 ms | 6040 ms | 3 |
+| first integrated path with three product checkouts (discarded) | 6910 / 6850 / 7190 ms | 6910 ms | 1 |
+
+The alternating order was manual, onboard, onboard, manual, manual, onboard.
+Each sample used a new mode-0700 temporary root. The manual harness called
+`bootstrapWorkspace({ repositorySelection: ["evidenceForge"] })`, then ran these
+commands in the returned checkout:
+
+```sh
+pnpm install --frozen-lockfile --ignore-scripts
+pnpm --silent forge --source "$source" --exact "$exact" \
+  --available-at "$available_at" --directory "$output" --promote-immediately
+```
+
+The onboard sample ran the documented command with the same source, quote, and
+timestamp. The one-command path is 19.5% slower than the scoped manual minimum:
+it additionally uses a fresh disposable execution checkout, snapshots the input,
+runs an independent packet verifier, validates artifact relationships, and checks
+repository cleanliness. It remains under half the 10-second target while removing
+two operator transitions. The earlier 36.9% reduction measures removal of two
+unused product checkouts from the discarded integrated design, not an
+orchestration-speed claim. Full three-product inspection remains available via
+`pnpm bootstrap`.

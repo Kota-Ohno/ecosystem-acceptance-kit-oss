@@ -247,6 +247,25 @@
         "verificationReceipt": "ea0736308d2e650ab42266825cb4152424dace472982d81b07ff4b515eccd7f9"
       },
       "entrySha256": "c0933a630a070d4c263feea8f7d89e3f74e769c5335e3ca89b3e78d2dda908de"
+    },
+    {
+      "sequence": 14,
+      "receiptSha256": "43748b5a481a478aed1cc21693a6d4e5d4843e61303bcf864e63aed955265dba",
+      "previousEntrySha256": "c0933a630a070d4c263feea8f7d89e3f74e769c5335e3ca89b3e78d2dda908de",
+      "runId": "2026-07-14T14-51-57.140Z-6491e3c9",
+      "completedAt": "2026-07-14T14:53:17.554Z",
+      "revisions": {
+        "agentBlackBox": "c2c6c6909899b31adbdb5c6e1e533afbf6ee65c1",
+        "evidenceForge": "fcdd3e0ea0a15d394571679cd38287484d0a4ef9",
+        "solLedger": "29fe9e6ce91a5c9254a2121c2cf4dc914fdd3b2e",
+        "solLedgerContract": "6139085503dec278e86cf0d9673d84ba34eb1e92"
+      },
+      "artifactSha256s": {
+        "stackReport": "9c20a198ead55de68745854e352a04fa7ea09e063215046fd8d2e1c609c316db",
+        "releasePack": "0d095bd2c373fa0556feb4815a23f077ca3dce5a2ec97050c41643cfd3a2dde8",
+        "verificationReceipt": "2a158594fae4fa8f5e6f9393784a010cca7d96acce572d994734c9816002d0c5"
+      },
+      "entrySha256": "8034f8435ae0f58874a28da2cde71fb6ca193cd5c2a0fcb2de0205a6d7382231"
     }
   ],
   "anchorPolicy": {
@@ -256,6 +275,6 @@
   },
   "integrity": {
     "algorithm": "sha256-jcs",
-    "indexSha256": "05d2c8e9da88f8af09667a514e5217d43ec15629111bf3486a19b21e050f6623"
+    "indexSha256": "24378c4a8ee50aeece5688cdd764d7d3b2abb79b72119e564ee8fa71b433db67"
   }
 }

@@ -62,7 +62,7 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
       throw new Error("Installed Kit package identity does not match the source package");
     }
     const help = run(executable, ["--help"], { cwd: consumer }).stdout;
-    if (!help.includes("--exact-file FILE") || !help.includes("verify-receipt FILE")) {
+    if (!help.includes("--cite-entire-source") || !help.includes("--exact-file FILE") || !help.includes("verify-receipt FILE")) {
       throw new Error("Installed Kit help is incomplete");
     }
     const onboardingDoctor = parseJson(run(executable, [
@@ -89,15 +89,13 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
     let repeatedAutomaticDirectoriesVerified = false;
     if (onlineOnboard) {
       const source = join(consumer, "source.txt");
-      const exactFile = join(consumer, "exact.txt");
       const exact = "Installed package private onboarding observation.";
       writeFileSync(source, `${exact}\n`, { mode: 0o600 });
-      writeFileSync(exactFile, exact, { mode: 0o600 });
       const workspace = join(consumer, "workspace");
       const directories = [];
       for (let position = 0; position < 2; position += 1) {
         const result = run(executable, [
-          "onboard", "--workspace-root", workspace, "--source", source, "--exact-file", exactFile,
+          "onboard", "--workspace-root", workspace, "--source", source, "--cite-entire-source",
           "--available-at", "2026-07-14T00:00:00Z", "--promote-immediately", "--json",
         ], { cwd: consumer, timeoutMs: 120_000 });
         const report = parseJson(result.stdout, "Installed Kit onboard");
@@ -106,7 +104,7 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
             report.evidence?.outcome !== "verified" || report.scope?.allRepositoriesChecked !== false ||
             realpathSync(dirname(report.directory)) !== realpathSync(consumer) ||
             !/^evidence-\d{8}T\d{6}Z-[0-9a-f]{8}$/u.test(basename(report.directory)) ||
-            serialized.includes(exact) || serialized.includes(source) || serialized.includes(exactFile)) {
+            serialized.includes(exact) || serialized.includes(source)) {
           throw new Error("Installed Kit onboard contract failed");
         }
         directories.push(report.directory);

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.10.0 — 2026-07-14
+
+- Add `--cite-entire-source` for the common case where one complete file is the
+  observation, eliminating duplicate exact-file setup and quote argv exposure.
+- Reuse the same bounded private snapshot for source and exact citation while
+  preserving explicit `--exact-file` and compatibility `--exact` modes.
+- Validate the 64 KiB UTF-8 citation contract before bootstrap, bind the source
+  pathname check to the opened inode, and register signal cleanup immediately.
+
 ## 0.9.0 — 2026-07-14
 
 - Choose a bounded, collision-resistant Evidence output directory automatically

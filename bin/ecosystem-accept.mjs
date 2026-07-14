@@ -17,7 +17,7 @@ const usage = `Usage:
   ecosystem-accept demo [--json]
   ecosystem-accept doctor [--onboard] [--offline] [--json]
   ecosystem-accept bootstrap [--manifest FILE] [--workspace-root DIR] [--json]
-  ecosystem-accept onboard [--manifest FILE] [--workspace-root DIR] [--directory NEW_DIR] [--source FILE (--exact TEXT | --exact-file FILE) --available-at ISO --promote-immediately] [--json]
+  ecosystem-accept onboard [--manifest FILE] [--workspace-root DIR] [--directory NEW_DIR] [--source FILE (--cite-entire-source | --exact TEXT | --exact-file FILE) --available-at ISO --promote-immediately] [--json]
   ecosystem-accept run [--manifest FILE] [--output-root DIR] [--workspace-root DIR] [--keep-workspace]
   ecosystem-accept plan [--manifest FILE]
   ecosystem-accept compare OLD_LOCK NEW_LOCK [--output FILE]
@@ -107,6 +107,7 @@ async function main() {
       source: options.source,
       exact: options.exact,
       exactFile: options.exactFile,
+      citeEntireSource: options.citeEntireSource,
       availableAt: options.availableAt,
       promoteImmediately: options.promoteImmediately,
       reporter: textBootstrapReporter((line) => process.stderr.write(line)),
@@ -170,6 +171,7 @@ function parseOnboard(arguments_) {
     workspaceRoot: resolve(process.cwd(), "evidence-ecosystem-workspace"),
     directory: resolve(process.cwd(), "my-first-evidence"),
     promoteImmediately: false,
+    citeEntireSource: false,
     json: false,
   };
   const seen = new Set();
@@ -179,6 +181,7 @@ function parseOnboard(arguments_) {
     seen.add(name);
     if (name === "--json") { options.json = true; continue; }
     if (name === "--promote-immediately") { options.promoteImmediately = true; continue; }
+    if (name === "--cite-entire-source") { options.citeEntireSource = true; continue; }
     const value = arguments_[index + 1];
     if (!["--manifest", "--workspace-root", "--directory", "--source", "--exact", "--exact-file", "--available-at"].includes(name) ||
         !value || (name !== "--exact" && value.startsWith("--"))) throw new Error(usage);
@@ -189,11 +192,11 @@ function parseOnboard(arguments_) {
     options[key] = ["--manifest", "--workspace-root", "--directory", "--source", "--exact-file"].includes(name) ? resolve(value) : value;
     index += 1;
   }
-  const localRequested = options.source || options.exact || options.exactFile || options.availableAt || options.promoteImmediately;
-  const exactCount = [options.exact, options.exactFile].filter(Boolean).length;
+  const localRequested = options.source || options.exact || options.exactFile || options.citeEntireSource || options.availableAt || options.promoteImmediately;
+  const exactCount = [options.exact, options.exactFile, options.citeEntireSource].filter(Boolean).length;
   if (localRequested && (!options.source || exactCount !== 1 || !options.availableAt || !options.promoteImmediately)) {
     const missing = [
-      ["--source", options.source], ["--exact or --exact-file", exactCount === 1], ["--available-at", options.availableAt],
+      ["--source", options.source], ["one citation selector", exactCount === 1], ["--available-at", options.availableAt],
       ["--promote-immediately", options.promoteImmediately],
     ].filter(([, value]) => value === undefined || value === false).map(([name]) => name);
     throw new Error(`Local-file onboarding is missing required options: ${missing.join(", ")}`);

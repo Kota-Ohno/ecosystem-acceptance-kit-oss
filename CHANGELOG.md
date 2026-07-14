@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.1 — 2026-07-14
+
+- Pin the merged Evidence Forge warm-quickstart optimization.
+- Retain its non-executing preflight and full local ecosystem acceptance evidence.
+
 ## 0.5.0 — 2026-07-14
 
 - Add a progressive one-command bootstrap that runs the offline demo and environment doctor,

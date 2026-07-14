@@ -81,6 +81,23 @@ under the current directory when `--directory` is omitted; this timestamp is onl
 an organizational filename and is not trusted Evidence time. Pass
 `--directory ./my-evidence` when a specific new path is desired.
 
+Keep the printed packet SHA-256 somewhere independent of the Evidence directory.
+Later, re-verify the retained packet through a Kit workflow that does not write
+to the Evidence directory:
+
+```bash
+pnpm verify-evidence \
+  --directory ./my-evidence \
+  --expected-sha256 <independently-kept-packet-sha256>
+```
+
+This shows eight progress steps, runs the verifier from a fresh checkout of the
+pinned Evidence Forge revision, installs dependencies with lifecycle scripts
+disabled, and removes the disposable checkout. It may access GitHub and the
+package registry; the persistent checkout and pnpm store make repeats cheaper.
+The Kit requires the expected digest argument but cannot verify where you stored
+or obtained it; independence is an operator practice, not a machine claim.
+
 Unlike `demo` and `bootstrap`, onboarding intentionally executes the pinned
 Evidence Forge workflow and may access GitHub and the package registry. It
 has no configured paid-service integration and does not overwrite an existing
@@ -132,6 +149,9 @@ pnpm onboard
 # One-command packet from a caller-selected local source.
 pnpm --silent onboard --source ./notes.txt --cite-entire-source \
   --available-at 2026-07-11T00:00:00Z --promote-immediately
+
+# Re-verify retained Evidence against the independently kept packet digest.
+pnpm verify-evidence --directory ./my-evidence --expected-sha256 <sha256>
 
 # Diagnose all full-run prerequisites; use --offline to avoid GitHub access.
 pnpm doctor

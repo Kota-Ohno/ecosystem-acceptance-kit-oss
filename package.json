@@ -1,6 +1,6 @@
 {
   "name": "ecosystem-acceptance-kit",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "private": true,
   "type": "module",
   "description": "Revision-pinned acceptance runner for the Evidence Forge ecosystem",
@@ -27,6 +27,7 @@
   "scripts": {
     "bootstrap": "node bin/ecosystem-accept.mjs bootstrap",
     "onboard": "node bin/ecosystem-accept.mjs onboard",
+    "verify-evidence": "node bin/ecosystem-accept.mjs verify-evidence",
     "demo": "node bin/ecosystem-accept.mjs demo",
     "doctor": "node bin/ecosystem-accept.mjs doctor",
     "audit:secrets": "node scripts/audit-secrets.mjs",

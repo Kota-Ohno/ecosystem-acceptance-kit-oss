@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.11.0 — 2026-07-14
+
+- Add `verify-evidence` to re-verify a retained packet through a fresh checkout
+  of the pinned Evidence Forge revision with eight visible progress steps.
+- Require an expected packet SHA-256 argument, snapshot the private packet before
+  execution, and recommend storing the digest independently. The Kit cannot
+  prove where the caller obtained or stored that argument.
+
 ## 0.10.0 — 2026-07-14
 
 - Add `--cite-entire-source` for the common case where one complete file is the

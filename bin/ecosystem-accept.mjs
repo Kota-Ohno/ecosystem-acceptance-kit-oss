@@ -7,7 +7,10 @@ import { bootstrapWorkspace, formatBootstrap, textBootstrapReporter } from "../l
 import { diagnoseEnvironment, formatDoctor } from "../lib/doctor.mjs";
 import { appendIndex, verifyIndexFile } from "../lib/index.mjs";
 import { loadManifest } from "../lib/manifest.mjs";
-import { createAutomaticEvidenceDirectory, formatOnboard, onboardFirstEvidence } from "../lib/onboard.mjs";
+import {
+  createAutomaticEvidenceDirectory, formatOnboard, formatRetainedEvidenceVerification, onboardFirstEvidence,
+  verifyRetainedEvidence,
+} from "../lib/onboard.mjs";
 import { compareManifests } from "../lib/preflight.mjs";
 import { loadAndVerifyReceipt } from "../lib/receipt.mjs";
 import { createPlan, runAcceptance } from "../lib/runner.mjs";
@@ -18,6 +21,7 @@ const usage = `Usage:
   ecosystem-accept doctor [--onboard] [--offline] [--json]
   ecosystem-accept bootstrap [--manifest FILE] [--workspace-root DIR] [--json]
   ecosystem-accept onboard [--manifest FILE] [--workspace-root DIR] [--directory NEW_DIR] [--source FILE (--cite-entire-source | --exact TEXT | --exact-file FILE) --available-at ISO --promote-immediately] [--json]
+  ecosystem-accept verify-evidence --directory DIR --expected-sha256 SHA256 [--manifest FILE] [--workspace-root DIR] [--json]
   ecosystem-accept run [--manifest FILE] [--output-root DIR] [--workspace-root DIR] [--keep-workspace]
   ecosystem-accept plan [--manifest FILE]
   ecosystem-accept compare OLD_LOCK NEW_LOCK [--output FILE]
@@ -28,7 +32,7 @@ const usage = `Usage:
 function parse(arguments_) {
   if (arguments_.includes("--help") || arguments_.includes("-h")) return { command: "help" };
   const command = arguments_[0];
-  if (!["demo", "doctor", "bootstrap", "onboard", "run", "plan", "compare", "index", "verify-receipt"].includes(command)) throw new Error(usage);
+  if (!["demo", "doctor", "bootstrap", "onboard", "verify-evidence", "run", "plan", "compare", "index", "verify-receipt"].includes(command)) throw new Error(usage);
   if (command === "demo") {
     if (arguments_.some((value, index) => index > 0 && value !== "--json")) throw new Error(usage);
     return { command, json: arguments_.includes("--json") };
@@ -45,6 +49,7 @@ function parse(arguments_) {
   }
   if (command === "bootstrap") return parseBootstrap(arguments_.slice(1));
   if (command === "onboard") return parseOnboard(arguments_.slice(1));
+  if (command === "verify-evidence") return parseVerifyEvidence(arguments_.slice(1));
   if (command === "index") return parseIndex(arguments_.slice(1));
   if (command === "compare") {
     if (arguments_.length < 3 || arguments_.length > 5) throw new Error(usage);
@@ -115,6 +120,18 @@ async function main() {
     process.stdout.write(`${options.json ? JSON.stringify(report, null, 2) : formatOnboard(report)}\n`);
     return;
   }
+  if (options.command === "verify-evidence") {
+    const { manifest } = loadManifest(options.manifest);
+    const report = await verifyRetainedEvidence({
+      manifest,
+      workspaceRoot: options.workspaceRoot,
+      directory: options.directory,
+      expectedSha256: options.expectedSha256,
+      reporter: textBootstrapReporter((line) => process.stderr.write(line)),
+    });
+    process.stdout.write(`${options.json ? JSON.stringify(report, null, 2) : formatRetainedEvidenceVerification(report)}\n`);
+    return;
+  }
   if (options.command === "verify-receipt") {
     process.stdout.write(`${JSON.stringify(loadAndVerifyReceipt(options.receipt), null, 2)}\n`);
     return;
@@ -161,6 +178,33 @@ function parseBootstrap(arguments_) {
     options[name === "--manifest" ? "manifest" : "workspaceRoot"] = resolve(value);
     index += 1;
   }
+  return options;
+}
+
+function parseVerifyEvidence(arguments_) {
+  const options = {
+    command: "verify-evidence",
+    manifest: resolve(root, "acceptance.lock.json"),
+    workspaceRoot: resolve(process.cwd(), "evidence-ecosystem-workspace"),
+    json: false,
+  };
+  const seen = new Set();
+  for (let index = 0; index < arguments_.length; index += 1) {
+    const name = arguments_[index];
+    if (seen.has(name)) throw new Error(usage);
+    seen.add(name);
+    if (name === "--json") { options.json = true; continue; }
+    const value = arguments_[index + 1];
+    if (!["--manifest", "--workspace-root", "--directory", "--expected-sha256"].includes(name) ||
+        !value || value.startsWith("--")) throw new Error(usage);
+    const key = {
+      "--manifest": "manifest", "--workspace-root": "workspaceRoot", "--directory": "directory",
+      "--expected-sha256": "expectedSha256",
+    }[name];
+    options[key] = name === "--expected-sha256" ? value : resolve(value);
+    index += 1;
+  }
+  if (!options.directory || !/^[0-9a-f]{64}$/u.test(options.expectedSha256 ?? "")) throw new Error(usage);
   return options;
 }
 

@@ -12,16 +12,22 @@ It coordinates the Evidence Forge ecosystem:
 - Evidence Forge exercises capture-to-promotion behavior from its packed artifact,
   produces a two-signer review bundle, and verifies a signed release evidence pack.
 
-> **Distribution status:** install from this source repository with pnpm. The
-> package remains `private: true` and is not published to npm, which prevents an
-> accidental registry release while keeping source installation supported.
-> Before repository visibility is public, cloning requires authorized GitHub
-> access; after visibility changes, the same source-install steps work anonymously.
+Published on npm as
+[`ecosystem-acceptance-kit`](https://www.npmjs.com/package/ecosystem-acceptance-kit)
+under the MIT License.
 
 ## Start here
 
-Requires macOS or Linux, Node.js 24.4 or newer, Git, and pnpm. The repository
-pins pnpm 11.0.8. Install it once:
+Requires macOS or Linux, Node.js 24.4 or newer, and Git. Install it once:
+
+```bash
+pnpm add --global ecosystem-acceptance-kit
+ecosystem-accept demo
+```
+
+`npm install --global ecosystem-acceptance-kit` is the npm equivalent.
+
+For repository development, the source tree pins pnpm 11.0.8:
 
 ```bash
 git clone https://github.com/Kota-Ohno/ecosystem-acceptance-kit-oss.git
@@ -39,6 +45,8 @@ If `corepack` is unavailable but pnpm 11.0.8 is already installed, skip
 pnpm demo
 ```
 
+With the installed package, run `ecosystem-accept demo` instead.
+
 The offline demo uses synthetic data, performs no network access, and shows that
 a valid receipt passes while a modified artifact is rejected. It demonstrates
 the integrity check; it does not claim that your file or the real repositories
@@ -49,6 +57,8 @@ were checked.
 ```bash
 pnpm evidence ./notes.txt
 ```
+
+With the installed package, run `ecosystem-accept evidence ./notes.txt`.
 
 The command first validates the file and fixes its bytes in a private temporary
 snapshot. It displays that snapshot's SHA-256 fingerprint, then asks three

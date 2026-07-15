@@ -2,6 +2,8 @@
 
 ## 0.13.0 — 2026-07-15
 
+- Publish the installable `ecosystem-acceptance-kit` npm package and document
+  the global CLI path while preserving source-based pnpm development.
 - Add `pnpm evidence FILE` as the single human-facing entry point, with three
   explicit preflight decisions and plain-language eight-step progress.
 - Add a non-interactive `--yes --available-at ISO --json` contract for agents

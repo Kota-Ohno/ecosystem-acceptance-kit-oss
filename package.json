@@ -1,10 +1,27 @@
 {
   "name": "ecosystem-acceptance-kit",
   "version": "0.13.0",
-  "private": true,
   "type": "module",
   "description": "Guided local Evidence creation and revision-pinned ecosystem verification",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kota-Ohno/ecosystem-acceptance-kit-oss.git"
+  },
+  "homepage": "https://github.com/Kota-Ohno/ecosystem-acceptance-kit-oss#readme",
+  "bugs": {
+    "url": "https://github.com/Kota-Ohno/ecosystem-acceptance-kit-oss/issues"
+  },
+  "keywords": [
+    "evidence",
+    "provenance",
+    "verification",
+    "ai-agent",
+    "supply-chain"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=24.4"
   },

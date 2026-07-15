@@ -61,8 +61,8 @@ fourteen-entry retained index head is
   so publishing source creates no running-cost or unauthenticated quota surface.
 - All repositories contain MIT licenses. `Kota Ohno` is the intentionally public
   copyright-holder name used consistently across the four clean repositories.
-- Registry publication remains independently disabled: Node manifests are
-  `private: true`, and all three Sol Ledger Rust crates set `publish = false`.
+- Registry publication is separately gated and verified through packed-install
+  smoke tests; public source visibility alone does not imply a registry release.
 
 ## Publication order
 
@@ -71,8 +71,8 @@ fourteen-entry retained index head is
    references resolve against the visible protocol repository.
 3. Ecosystem Acceptance Kit, after pinning the visible repository heads,
    running preflight, then completing a new full acceptance run.
-4. Optional npm or crate publication only after separate package-name,
-   provenance, and registry confirmation.
+4. npm and crate publication only after separate package-name, provenance, and
+   registry confirmation.
 
 Immediately before each visibility or registry action, rerun Gitleaks history
 and tree scans, the repository's documented full local gate, package-content

@@ -12,6 +12,8 @@
 - Fix and fingerprint eligible source bytes before interactive consent, remove
   custom-manifest execution from the human command, strictly validate calendar
   timestamps, and disclose the pinned-code/network trust boundary in-product.
+- Animate the active TTY progress step in place while preserving append-only
+  textual progress for redirected, CI, and agent-consumed stderr.
 
 ## 0.12.2 — 2026-07-14
 

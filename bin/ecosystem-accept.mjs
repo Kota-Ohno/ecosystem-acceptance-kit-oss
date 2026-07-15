@@ -135,6 +135,7 @@ async function main() {
           promoteImmediately: true,
           reporter: evidenceProgressReporter((line) => process.stderr.write(line), {
             onEvidenceCreated: () => { evidenceCreated = true; },
+            interactive: process.stderr.isTTY === true,
           }),
         });
       } catch (error) {

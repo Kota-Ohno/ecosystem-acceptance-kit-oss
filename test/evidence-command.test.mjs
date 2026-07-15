@@ -147,6 +147,27 @@ test("translates implementation progress into human tasks", () => {
   assert.equal(evidenceCreated, 1);
 });
 
+test("rewrites one animated TTY line and leaves only the completed step", () => {
+  let output = "";
+  let tick;
+  let cancelled = false;
+  let unrefed = false;
+  const timer = { unref: () => { unrefed = true; } };
+  const reporter = evidenceProgressReporter((chunk) => { output += chunk; }, {
+    interactive: true,
+    schedule: (callback, interval) => { assert.equal(interval, 80); tick = callback; return timer; },
+    cancel: (value) => { assert.equal(value, timer); cancelled = true; },
+  });
+  reporter({ state: "start", position: 5, total: 8, name: "evidence-forge:dependencies" });
+  tick();
+  reporter({ state: "done", position: 5, total: 8, name: "evidence-forge:dependencies", durationMs: 640 });
+  assert.equal(unrefed, true);
+  assert.equal(cancelled, true);
+  assert.match(output, /\r\u001b\[2K\[05\/08\] ⠋ Install pinned dependencies/u);
+  assert.match(output, /\r\u001b\[2K\[05\/08\] ✓ Install pinned dependencies \(lifecycle scripts disabled\) \(0\.6s\)\n$/u);
+  assert.equal(output.match(/\n/gu)?.length, 1);
+});
+
 test("explains outcome, retained data, limitations, and the next operation", () => {
   const report = {
     version: 2,

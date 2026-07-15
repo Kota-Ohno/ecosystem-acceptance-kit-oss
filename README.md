@@ -1,9 +1,9 @@
 # Ecosystem Acceptance Kit
 
-Ecosystem Acceptance Kit is for maintainers and reviewers who want one local
-answer to “do these exact pinned revisions still work together?” It offers a
-seconds-fast offline demo, prerequisite diagnosis, and a revision-pinned full
-acceptance run that produces a tamper-evident receipt.
+Ecosystem Acceptance Kit is the front door for creating locally verifiable
+Evidence and checking that the underlying tools still work together. Start with
+one file and one guided command; the lower-level products remain available when
+you need custom capture, review, protocol, or release-acceptance behavior.
 
 It coordinates the Evidence Forge ecosystem:
 
@@ -18,26 +18,110 @@ It coordinates the Evidence Forge ecosystem:
 > Before repository visibility is public, cloning requires authorized GitHub
 > access; after visibility changes, the same source-install steps work anonymously.
 
-## Shortest path
+## Start here
+
+Requires macOS or Linux, Node.js 24.4 or newer, Git, and pnpm. The repository
+pins pnpm 11.0.8. Install it once:
 
 ```bash
 git clone https://github.com/Kota-Ohno/ecosystem-acceptance-kit-oss.git
 cd ecosystem-acceptance-kit-oss
 corepack enable
 pnpm install --frozen-lockfile --ignore-scripts
+```
+
+If `corepack` is unavailable but pnpm 11.0.8 is already installed, skip
+`corepack enable`.
+
+### 1. See the idea in 30 seconds
+
+```bash
 pnpm demo
+```
+
+The offline demo uses synthetic data, performs no network access, and shows that
+a valid receipt passes while a modified artifact is rejected. It demonstrates
+the integrity check; it does not claim that your file or the real repositories
+were checked.
+
+### 2. Create Evidence from one file
+
+```bash
+pnpm evidence ./notes.txt
+```
+
+The command first validates the file and fixes its bytes in a private temporary
+snapshot. It displays that snapshot's SHA-256 fingerprint, then asks three
+plain-language questions before network access, pinned-code execution, or
+Evidence creation:
+
+1. whether the whole file is the observation you want to cite;
+2. when that source became available to you—enter RFC 3339, or explicitly enter
+   `now` only when it became available just now; and
+3. whether to run the included pinned code and create Verified Evidence now.
+
+Before confirmation, the guide explains that it may contact GitHub and the
+package registry, installs dependencies with lifecycle scripts disabled, and
+runs the Kit's included pinned Evidence Forge revision with your user
+permissions. Choosing no exits before Evidence creation; Candidate inspection
+uses the advanced `capture` then `promote` workflow.
+
+It then shows eight progress steps and finishes with **What happened**, **What
+was recorded**, and **What to do next**. The reviewed pinned workflow is
+designed not to upload the source and does not print its content, but this is not
+enforced by an OS sandbox; read the [threat model](docs/THREAT_MODEL.md) before
+using highly sensitive material. Existing output is never overwritten, and the
+final fingerprint can be used to re-check the retained packet later. The
+whole-file path accepts a non-empty UTF-8 file up to 64 KiB without a BOM or NUL.
+
+The observation time is supplied by you. It is recorded for provenance but is
+not an independently trusted timestamp. Likewise, successful verification
+proves integrity and process consistency—not that the source is truthful.
+
+### 3. Use it from an AI agent or script
+
+Automation must state the documented trust decisions explicitly and never waits
+for a prompt:
+
+```bash
+pnpm --silent evidence ./notes.txt \
+  --yes \
+  --available-at 2026-07-11T00:00:00Z \
+  --json
+```
+
+`--yes` means “cite the whole file, permit the documented GitHub/registry access
+and included pinned-code execution, and promote immediately.” JSON is written to
+stdout and progress stays on stderr. `--json` without `--yes`, or `--yes`
+without an RFC 3339 `--available-at`, fails before checkout or Evidence creation.
+Use `--directory ./my-evidence` when a stable output path is needed; otherwise a
+new collision-resistant directory is selected.
+
+## What the system records
+
+- A private snapshot of the selected source file.
+- A Candidate binding the whole-file citation to that snapshot.
+- Verified Evidence created after the explicit promotion decision.
+- A portable packet and SHA-256 fingerprint for later re-checking with the
+  pinned verifier. Store that fingerprint through a separate channel when the
+  comparison needs an independently retained value.
+
+The reviewed pinned local-file workflow is designed not to print or upload the
+source text, but the process is not network-sandboxed; setup may contact GitHub
+and the package registry. See the [threat model](docs/THREAT_MODEL.md).
+Keep the Evidence directory private and store the printed fingerprint somewhere
+separate from it.
+
+## Advanced paths
+
+Check the lightweight path's prerequisites before using a real file:
+
+```bash
 pnpm doctor --onboard
 ```
 
-The repository pins pnpm 11.0.8. If `corepack` is unavailable but that pnpm
-version is already installed, skip the `corepack enable` line.
-
-`pnpm demo` is deterministic, uses only Node.js, performs no network access, and
-proves that a synthetic receipt verifies while a mutation is rejected. It does
-not claim that the real repositories passed. `pnpm doctor --onboard` checks only
-Node.js, Git, pnpm, the supported OS, and Evidence Forge access. Plain
-`pnpm doctor` keeps the broader npm, Cargo, and three-repository checks needed by
-full acceptance.
+Plain `pnpm doctor` keeps the broader npm, Cargo, and three-repository checks
+needed by full acceptance.
 
 Run the local tutorial and create a verified packet with one command:
 
@@ -54,7 +138,8 @@ disposable execution byte. The result is written to
 `./my-first-evidence`; the inspection-only Evidence Forge checkout remains in
 `./evidence-ecosystem-workspace`.
 
-When the entire local text file is the observation, the shortest private path is:
+The guided `evidence` command is a human-facing wrapper over this explicit
+whole-file workflow:
 
 ```bash
 pnpm --silent onboard \
@@ -63,10 +148,6 @@ pnpm --silent onboard \
   --available-at 2026-07-11T00:00:00Z \
   --promote-immediately
 ```
-
-The whole-file citation must be non-empty UTF-8, at most 64 KiB, and contain
-neither a UTF-8 BOM nor NUL. The Kit checks this before checkout or dependency
-installation, so invalid input fails quickly without network or bootstrap work.
 
 To cite only one excerpt, replace `--cite-entire-source` with
 `--exact-file ./private-exact.txt`. Create that file as mode-0600 UTF-8 without
@@ -80,8 +161,7 @@ retains the source snapshot and citation needed for verification. Keep
 separate `capture` then `promote` commands when Candidate inspection is required.
 Caller-source mode chooses a new `evidence-YYYYMMDDTHHMMSSZ-xxxxxxxx` directory
 under the current directory when `--directory` is omitted; this timestamp is only
-an organizational filename and is not trusted Evidence time. Pass
-`--directory ./my-evidence` when a specific new path is desired.
+an organizational filename and is not trusted Evidence time.
 
 Keep the printed packet SHA-256 somewhere independent of the Evidence directory.
 Later, re-verify the retained packet through a Kit workflow that does not write
@@ -150,6 +230,13 @@ Running bootstrap therefore does not shorten a later full acceptance run.
 # Fast, offline confidence in the receipt verifier.
 pnpm demo
 
+# Guided human path from one local file.
+pnpm evidence ./notes.txt
+
+# Non-interactive AI/script path with explicit trust decisions.
+pnpm --silent evidence ./notes.txt --yes \
+  --available-at 2026-07-11T00:00:00Z --json
+
 # One-command tutorial packet.
 pnpm onboard
 
@@ -192,11 +279,14 @@ pinned repository is access-restricted, confirm GitHub credentials, then rerun
 the same bootstrap command. Failed temporary checkouts are removed; existing
 conflicting or dirty directories are left unchanged.
 
-If onboarding fails, its inspection checkout and any completed Evidence output
-remain visible rather than being silently replaced; its disposable execution
-checkout is removed. Resolve the reported prerequisite or checkout issue, then
-rerun with a new `--directory`; a matching clean pinned inspection workspace is
-reused, but executable build/dependency state is always created from scratch.
+The guided `evidence` command prints its new private output directory before
+execution. If a later packet or checkout verification fails after output was
+created, it prints that retained location again and marks it as unverified.
+Inspect or remove the partial output manually, then rerun with a different new
+`--directory`. Lower-level onboarding likewise leaves completed Evidence output
+visible rather than replacing it; disposable execution checkouts are removed.
+A matching clean pinned inspection workspace is reused, but executable
+build/dependency state is always created from scratch.
 
 ## Role in the ecosystem
 

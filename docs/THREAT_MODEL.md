@@ -23,6 +23,13 @@ the source snapshot and citation by design. The Kit re-checks the output-parent
 identity immediately before execution and removes its temporary input snapshot.
 Immediate promotion is
 preauthorized; this mode does not represent human inspection of the Candidate.
+The human-facing `evidence SOURCE` command performs this bounded validation and
+private snapshot before prompting, displays the fixed snapshot's SHA-256, and
+passes only that fixed file into onboarding. Consent therefore remains bound to
+the same bytes even if the original path changes while the questions are open.
+The pre-consent snapshot is removed on cancellation, success, failure, or a
+handled process-exit signal.
+
 With `--cite-entire-source`, the same private snapshot path is supplied as both
 source and exact-file input, so no source bytes are copied into process arguments
 and there is no separately prepared quote file. The Kit validates the pinned

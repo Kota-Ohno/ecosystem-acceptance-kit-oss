@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.13.0 — 2026-07-15
+
+- Add `pnpm evidence FILE` as the single human-facing entry point, with three
+  explicit preflight decisions and plain-language eight-step progress.
+- Add a non-interactive `--yes --available-at ISO --json` contract for agents
+  and scripts that never waits for terminal input or silently invents trust data.
+- Replace the technical completion dump with “What happened / What was recorded /
+  What to do next” guidance and reorganize onboarding docs into demo, human, and
+  automation paths.
+- Fix and fingerprint eligible source bytes before interactive consent, remove
+  custom-manifest execution from the human command, strictly validate calendar
+  timestamps, and disclose the pinned-code/network trust boundary in-product.
+
 ## 0.12.2 — 2026-07-14
 
 - Replace temporary private-repository installation notices with durable source

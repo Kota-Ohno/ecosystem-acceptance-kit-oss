@@ -24,8 +24,8 @@ export function assertPackageEntries(entries) {
     "package/lib/runner.mjs", "package/docs/PERFORMANCE.md", "package/docs/THREAT_MODEL.md", "package/CHANGELOG.md",
     "package/baselines/README.md", "package/baselines/acceptance-index.json", "package/lib/bootstrap.mjs",
     "package/lib/child-process.mjs", "package/lib/demo.mjs", "package/lib/doctor.mjs", "package/lib/index.mjs",
-    "package/lib/evidence-runtime.mjs", "package/lib/evidence-verifier.mjs", "package/lib/manifest.mjs",
-    "package/lib/preflight.mjs", "package/lib/receipt.mjs",
+    "package/lib/evidence-command.mjs", "package/lib/evidence-runtime.mjs", "package/lib/evidence-verifier.mjs", "package/lib/manifest.mjs",
+    "package/lib/preflight.mjs", "package/lib/receipt.mjs", "package/lib/rfc3339.mjs",
     "package/scripts/audit-secrets.mjs",
   ];
   for (const entry of requiredEntries) {
@@ -64,9 +64,14 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
       throw new Error("Installed Kit package identity does not match the source package");
     }
     const help = run(executable, ["--help"], { cwd: consumer }).stdout;
-    if (!help.includes("--cite-entire-source") || !help.includes("--exact-file FILE") ||
+    if (!help.includes("ecosystem-accept evidence SOURCE") || !help.includes("--cite-entire-source") || !help.includes("--exact-file FILE") ||
         !help.includes("verify-evidence --directory DIR") || !help.includes("verify-receipt FILE")) {
       throw new Error("Installed Kit help is incomplete");
+    }
+    const evidenceHelp = run(executable, ["evidence", "--help"], { cwd: consumer }).stdout;
+    if (!evidenceHelp.includes("--yes accepts the whole-file citation") ||
+        !evidenceHelp.includes("possible network access") || evidenceHelp.includes("--manifest FILE")) {
+      throw new Error("Installed Kit evidence help is incomplete");
     }
     const onboardingDoctor = parseJson(run(executable, [
       "doctor", "--onboard", "--offline", "--json",
@@ -104,32 +109,34 @@ export function verifyPackageInstall({ onlineOnboard = false } = {}) {
       let jsonReport;
       for (let position = 0; position < 2; position += 1) {
         const arguments_ = [
-          "onboard", "--workspace-root", workspace, "--source", source, "--cite-entire-source",
-          "--available-at", "2026-07-14T00:00:00Z", "--promote-immediately",
+          "evidence", source, "--workspace-root", workspace,
+          "--available-at", "2026-07-14T00:00:00Z", "--yes",
         ];
         if (position === 0) arguments_.push("--json");
         const result = run(executable, arguments_, { cwd: consumer, timeoutMs: 120_000 });
         onboardDurationsMs.push(result.durationMs);
         if (position === 0) {
-          const report = parseJson(result.stdout, "Installed Kit onboard");
+          const report = parseJson(result.stdout, "Installed Kit evidence command");
           const serialized = JSON.stringify(report);
           if (report.version !== 2 || report.outcome !== "first_evidence_ready" ||
               report.evidence?.outcome !== "verified" || report.scope?.allRepositoriesChecked !== false ||
               realpathSync(dirname(report.directory)) !== realpathSync(consumer) ||
               !/^evidence-\d{8}T\d{6}Z-[0-9a-f]{8}$/u.test(basename(report.directory)) ||
               serialized.includes(exact) || serialized.includes(source)) {
-            throw new Error("Installed Kit onboard contract failed");
+            throw new Error("Installed Kit evidence JSON contract failed");
           }
           directories.push(report.directory);
           jsonReport = report;
           continue;
         }
         const directoryMatch = result.stdout.match(/^  Evidence directory: (.+)$/mu);
-        const packetSha256Match = result.stdout.match(/^  Packet SHA-256: ([0-9a-f]{64})$/mu);
-        const commandMatch = result.stdout.match(/^    (pnpm --dir .+)$/mu);
-        if (!result.stdout.includes("Verified Evidence: READY") || !directoryMatch || !packetSha256Match || !commandMatch ||
+        const packetSha256Match = result.stdout.match(/^  Verification fingerprint: ([0-9a-f]{64})$/mu);
+        const commandMatch = result.stdout.match(/^\s+(pnpm --dir .+)$/mu);
+        if (!result.stdout.includes("Evidence created and verified") ||
+            !result.stdout.includes("What happened") || !result.stdout.includes("What was recorded") ||
+            !result.stdout.includes("What to do next") || !directoryMatch || !packetSha256Match || !commandMatch ||
             result.stdout.includes(exact) || result.stdout.includes(source)) {
-          throw new Error("Installed Kit text onboarding contract failed");
+          throw new Error("Installed Kit human evidence summary contract failed");
         }
         directories.push(directoryMatch[1]);
         const retainedResult = run("/bin/sh", ["-c", commandMatch[1]], {

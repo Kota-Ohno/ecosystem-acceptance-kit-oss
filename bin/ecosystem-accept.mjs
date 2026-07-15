@@ -1,8 +1,12 @@
 #!/usr/bin/env node
-import { mkdirSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { formatDemo, runOfflineDemo } from "../lib/demo.mjs";
+import {
+  confirmEvidenceIntent, evidenceProgressReporter, evidenceUsage, formatEvidenceFailure, formatEvidenceStart,
+  formatEvidenceSummary, parseEvidenceArguments, prepareEvidenceSource,
+} from "../lib/evidence-command.mjs";
 import { bootstrapWorkspace, formatBootstrap, textBootstrapReporter } from "../lib/bootstrap.mjs";
 import { diagnoseEnvironment, formatDoctor } from "../lib/doctor.mjs";
 import { appendIndex, verifyIndexFile } from "../lib/index.mjs";
@@ -18,6 +22,8 @@ const usage = `Usage:
   ecosystem-accept demo [--json]
   ecosystem-accept doctor [--onboard] [--offline] [--json]
   ecosystem-accept bootstrap [--manifest FILE] [--workspace-root DIR] [--json]
+  ecosystem-accept evidence SOURCE [--available-at ISO] [--directory NEW_DIR] [--workspace-root DIR]
+  ecosystem-accept evidence SOURCE --yes --available-at ISO [--directory NEW_DIR] [--workspace-root DIR] [--json]
   ecosystem-accept onboard [--manifest FILE] [--workspace-root DIR] [--directory NEW_DIR] [--source FILE (--cite-entire-source | --exact TEXT | --exact-file FILE) --available-at ISO --promote-immediately] [--json]
   ecosystem-accept verify-evidence --directory DIR --expected-sha256 SHA256 [--manifest FILE] [--workspace-root DIR] [--json]
   ecosystem-accept run [--manifest FILE] [--output-root DIR] [--workspace-root DIR] [--keep-workspace]
@@ -28,9 +34,12 @@ const usage = `Usage:
   ecosystem-accept verify-receipt FILE`;
 
 function parse(arguments_) {
+  if (arguments_[0] === "evidence" && arguments_.slice(1).some((value) => value === "--help" || value === "-h")) {
+    return { command: "evidence-help" };
+  }
   if (arguments_.includes("--help") || arguments_.includes("-h")) return { command: "help" };
   const command = arguments_[0];
-  if (!["demo", "doctor", "bootstrap", "onboard", "verify-evidence", "run", "plan", "compare", "index", "verify-receipt"].includes(command)) throw new Error(usage);
+  if (!["demo", "doctor", "bootstrap", "evidence", "onboard", "verify-evidence", "run", "plan", "compare", "index", "verify-receipt"].includes(command)) throw new Error(usage);
   if (command === "demo") {
     if (arguments_.some((value, index) => index > 0 && value !== "--json")) throw new Error(usage);
     return { command, json: arguments_.includes("--json") };
@@ -46,6 +55,10 @@ function parse(arguments_) {
     };
   }
   if (command === "bootstrap") return parseBootstrap(arguments_.slice(1));
+  if (command === "evidence") return parseEvidenceArguments(arguments_.slice(1), {
+    defaultManifest: resolve(root, "acceptance.lock.json"),
+    createDirectory: createAutomaticEvidenceDirectory,
+  });
   if (command === "onboard") return parseOnboard(arguments_.slice(1));
   if (command === "verify-evidence") return parseVerifyEvidence(arguments_.slice(1));
   if (command === "index") return parseIndex(arguments_.slice(1));
@@ -79,6 +92,7 @@ function parse(arguments_) {
 async function main() {
   const options = parse(process.argv.slice(2));
   if (options.command === "help") { process.stdout.write(`${usage}\n`); return; }
+  if (options.command === "evidence-help") { process.stdout.write(`${evidenceUsage}\n`); return; }
   if (options.command === "demo") {
     const report = runOfflineDemo();
     process.stdout.write(`${options.json ? JSON.stringify(report, null, 2) : formatDemo(report)}\n`);
@@ -99,6 +113,40 @@ async function main() {
       reporter: textBootstrapReporter((line) => process.stderr.write(line)),
     });
     process.stdout.write(`${options.json ? JSON.stringify(report, null, 2) : formatBootstrap(report)}\n`);
+    return;
+  }
+  if (options.command === "evidence") {
+    const preparedSource = prepareEvidenceSource(options);
+    try {
+      const intent = await confirmEvidenceIntent({ ...options, sourceSha256: preparedSource.sha256 });
+      const { manifest } = loadManifest(options.manifest);
+      if (existsSync(options.directory)) throw new Error("Evidence output directory already exists; choose a new directory");
+      process.stderr.write(`${formatEvidenceStart(options.directory)}\n`);
+      let report;
+      let evidenceCreated = false;
+      try {
+        report = await onboardFirstEvidence({
+          manifest,
+          workspaceRoot: options.workspaceRoot,
+          directory: options.directory,
+          source: preparedSource.path,
+          citeEntireSource: true,
+          availableAt: intent.availableAt,
+          promoteImmediately: true,
+          reporter: evidenceProgressReporter((line) => process.stderr.write(line), {
+            onEvidenceCreated: () => { evidenceCreated = true; },
+          }),
+        });
+      } catch (error) {
+        if (evidenceCreated && existsSync(options.directory)) {
+          process.stderr.write(`${formatEvidenceFailure(options.directory)}\n`);
+        }
+        throw error;
+      }
+      process.stdout.write(`${options.json ? JSON.stringify(report, null, 2) : formatEvidenceSummary(report)}\n`);
+    } finally {
+      preparedSource.cleanup();
+    }
     return;
   }
   if (options.command === "onboard") {

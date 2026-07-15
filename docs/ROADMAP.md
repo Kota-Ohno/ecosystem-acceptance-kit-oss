@@ -83,5 +83,8 @@
 - [x] M12s — Remove visibility-dependent installation copy, refresh the
   cross-repository release-readiness audit, pin the documentation-ready heads,
   and append their complete local acceptance receipt.
+- [x] M12t — Make the Kit the single human-facing front door with a guided
+  one-file Evidence command, plain-language progress and completion guidance,
+  and a prompt-free JSON contract for agents and scripts.
 - [ ] M13 — Obtain explicit approval before changing repository visibility or
   publishing any npm package, crate, deployment, or announcement.

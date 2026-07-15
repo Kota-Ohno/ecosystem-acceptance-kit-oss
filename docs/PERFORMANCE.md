@@ -118,3 +118,18 @@ not gate CI because host and network variance are material.
 
 Regression check: `pnpm check` and three consecutive
 `pnpm smoke:package:onboard` samples passed.
+
+## Guided Evidence entry point v0.13.0 — 2026-07-15
+
+The installed-package smoke now exercises `ecosystem-accept evidence` rather
+than calling the lower-level caller-source onboarding surface directly. A final
+warm-store release-candidate run measured 4,133 ms for a new workspace, 3,027 ms
+with the pinned checkout reused, and 3,274 ms for retained-packet verification.
+These are single non-gating samples, not a statistical baseline; all remain
+within the existing 6,000 / 4,000 / 4,000 ms targets. The guided parser,
+pre-consent 64 KiB snapshot and fingerprint, human summary, and JSON routing add
+no material regression relative to the preceding installed path.
+
+The complete `pnpm check`, including 79 tests and offline packed-install smoke,
+completed in 4.2 seconds on the same development machine. Networked timings
+remain informational because repository and registry variance is material.

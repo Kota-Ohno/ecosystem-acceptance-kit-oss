@@ -8,8 +8,8 @@ const required = [
   "package/lib/runner.mjs", "package/docs/PERFORMANCE.md", "package/docs/THREAT_MODEL.md", "package/CHANGELOG.md",
   "package/baselines/README.md", "package/baselines/acceptance-index.json", "package/lib/bootstrap.mjs",
   "package/lib/child-process.mjs", "package/lib/demo.mjs", "package/lib/doctor.mjs", "package/lib/index.mjs",
-  "package/lib/evidence-runtime.mjs", "package/lib/evidence-verifier.mjs", "package/lib/manifest.mjs",
-  "package/lib/preflight.mjs", "package/lib/receipt.mjs",
+  "package/lib/evidence-command.mjs", "package/lib/evidence-runtime.mjs", "package/lib/evidence-verifier.mjs", "package/lib/manifest.mjs",
+  "package/lib/preflight.mjs", "package/lib/receipt.mjs", "package/lib/rfc3339.mjs",
   "package/scripts/audit-secrets.mjs",
 ];
 

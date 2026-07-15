@@ -1,9 +1,9 @@
 {
   "name": "ecosystem-acceptance-kit",
-  "version": "0.12.2",
+  "version": "0.13.0",
   "private": true,
   "type": "module",
-  "description": "Revision-pinned acceptance runner for the Evidence Forge ecosystem",
+  "description": "Guided local Evidence creation and revision-pinned ecosystem verification",
   "license": "MIT",
   "engines": {
     "node": ">=24.4"
@@ -27,6 +27,7 @@
   ],
   "scripts": {
     "bootstrap": "node bin/ecosystem-accept.mjs bootstrap",
+    "evidence": "node bin/ecosystem-accept.mjs evidence",
     "onboard": "node bin/ecosystem-accept.mjs onboard",
     "verify-evidence": "node bin/ecosystem-accept.mjs verify-evidence",
     "demo": "node bin/ecosystem-accept.mjs demo",
@@ -40,6 +41,6 @@
     "index": "node bin/ecosystem-accept.mjs index",
     "verify-receipt": "node bin/ecosystem-accept.mjs verify-receipt",
     "test": "node --test",
-    "check": "node --check bin/ecosystem-accept.mjs && node --check lib/bootstrap.mjs && node --check lib/child-process.mjs && node --check lib/demo.mjs && node --check lib/doctor.mjs && node --check lib/evidence-runtime.mjs && node --check lib/evidence-verifier.mjs && node --check lib/index.mjs && node --check lib/manifest.mjs && node --check lib/onboard.mjs && node --check lib/preflight.mjs && node --check lib/receipt.mjs && node --check lib/runner.mjs && node --check scripts/audit-secrets.mjs && node --check scripts/verify-package-install.mjs && node --test && pnpm smoke:package"
+    "check": "node --check bin/ecosystem-accept.mjs && node --check lib/bootstrap.mjs && node --check lib/child-process.mjs && node --check lib/demo.mjs && node --check lib/doctor.mjs && node --check lib/evidence-command.mjs && node --check lib/evidence-runtime.mjs && node --check lib/evidence-verifier.mjs && node --check lib/index.mjs && node --check lib/manifest.mjs && node --check lib/onboard.mjs && node --check lib/preflight.mjs && node --check lib/receipt.mjs && node --check lib/rfc3339.mjs && node --check lib/runner.mjs && node --check scripts/audit-secrets.mjs && node --check scripts/verify-package-install.mjs && node --test && pnpm smoke:package"
   }
 }
